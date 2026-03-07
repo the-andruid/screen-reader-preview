@@ -7,7 +7,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src https://writing-games.org; connect-src 'none'; frame-src 'none';">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src https://writing-games.org; connect-src 'none'; frame-src 'none';">
 <title>Screen Reader Preview - Writing Games</title>
 <meta name="description" content="Paste text to hear how it sounds when spoken aloud. Detects ASCII tables, maps, art, and decorative borders that cause accessibility problems in text games such as MUDs.">
 <meta name="keywords" content="screen reader, accessibility, MUD, text game, ASCII art, NVDA, JAWS, VoiceOver, a11y">
@@ -395,25 +395,18 @@
   }
   .faq-item {
     border-top: 1px solid #eee;
-  }
-  .faq-item summary {
-    cursor: pointer;
-    padding: 0.5rem 0;
-  }
-  .faq-item summary h3 {
-    display: inline;
-    font-size: inherit;
-    font-weight: 600;
-    color: #333;
-    margin: 0;
-  }
-  .faq-item .faq-body {
-    padding: 0 0 0.5rem;
+    padding: 0.75rem 0;
     color: #474747;
     line-height: 1.6;
   }
-  .faq-item .faq-body p { margin: 0.3rem 0; }
-  .faq-item .faq-body a { color: #004da3; }
+  .faq-item h3 {
+    font-size: inherit;
+    font-weight: 600;
+    color: #333;
+    margin: 0 0 0.25rem;
+  }
+  .faq-item p { margin: 0.3rem 0; }
+  .faq-item a { color: #004da3; }
 </style>
 </head>
 <body>
@@ -1277,104 +1270,66 @@ function escHtml(s) {
   return d.innerHTML;
 }
 
-document.addEventListener('click', function(e) {
-  const a = e.target.closest('a[href^="#"]');
-  if (!a) return;
-  const el = document.querySelector(a.getAttribute('href'));
-  if (el && el.tagName === 'DETAILS') {
-    e.preventDefault();
-    el.open = true;
-    el.scrollIntoView({ behavior: 'smooth' });
-  }
-});
-// Also handle direct page load with hash
-(function() {
-  const el = document.getElementById(location.hash.replace('#', ''));
-  if (el && el.tagName === 'DETAILS') {
-    el.open = true;
-    el.scrollIntoView();
-  }
-})();
 </script>
 
 <section class="faq-section" id="faq">
   <h2>How It Works</h2>
 
-  <details class="faq-item">
-    <summary><h3>What does this tool do?</h3></summary>
-    <div class="faq-body">
-      <p>The Screen Reader Preview does three things: it simulates how a screen reader would read a block of text aloud, flags certain problematic patterns in the text -- such as ASCII art and tables, and provides practical recommendations for improvement. It's not a panacea. Rather, it's meant to help familiarize people with some of the most common issues and solutions.</p>   
-    </div>
-  </details>
+  <div class="faq-item">
+    <h3>What does this tool do?</h3>
+    <p>The Screen Reader Preview does three things: it simulates how a screen reader would read a block of text aloud, flags certain problematic patterns in the text -- such as ASCII art and tables, and provides practical recommendations for improvement. It's not a panacea. Rather, it's meant to help familiarize people with some of the most common issues and solutions.</p>
+  </div>
 
-  <details class="faq-item">
-    <summary><h3>What is a screen reader?</h3></summary>
-    <div class="faq-body">
-      <p>A screen reader is a software program (assistive technology) that allows people with blindness or low vision to access content on their computer screen through a voice synthesizer or braille. The tool described here specifically aims to simulate the former -- the kind of screen reader that reads text aloud.</p>
-    </div>
-  </details>
+  <div class="faq-item">
+    <h3>What is a screen reader?</h3>
+    <p>A screen reader is a software program (assistive technology) that allows people with blindness or low vision to access content on their computer screen through a voice synthesizer or braille. The tool described here specifically aims to simulate the former -- the kind of screen reader that reads text aloud.</p>
+  </div>
 
-  <details class="faq-item">
-    <summary><h3>Why does this matter?</h3></summary>
-    <div class="faq-body">
-      <p>Things like ASCII art, maps, and decorative borders are very common in text-based games such as <a href="https://writing-games.org/beginners-guide-to-multi-user-dungeons/">multi-user dungeons (MUDs)</a>, but they do not translate well into speech. A table that looks nice visually can sound like unhelpful gibberish when read aloud by a screen reader. Most people have never heard their content read aloud this way, so they don't realize how these things create barriers for players with visual disabilities.</p>
-    </div>
-  </details>
+  <div class="faq-item">
+    <h3>Why does this matter?</h3>
+    <p>Things like ASCII art, maps, and decorative borders are very common in text-based games such as <a href="https://writing-games.org/beginners-guide-to-multi-user-dungeons/">multi-user dungeons (MUDs)</a>, but they do not translate well into speech. A table that looks nice visually can sound like unhelpful gibberish when read aloud by a screen reader. Most people have never heard their content read aloud this way, so they don't realize how these things create barriers for players with visual disabilities.</p>
+  </div>
 
-  <details class="faq-item">
-    <summary><h3>How do I use it?</h3></summary>
-    <div class="faq-body">
-      <p>Paste any text into the input box -- room descriptions, help files, score screens, maps, whatever you want to test. Click <strong>Analyze &amp; Read Aloud</strong> to hear the screen reader simulation and see flagged issues, or <strong>Analyze Only</strong> to just see the results without audio. You can also populate the input box with one of the built-in examples that are quite common among MU* games.</p>
-    </div>
-  </details>
+  <div class="faq-item">
+    <h3>How do I use it?</h3>
+    <p>Paste any text into the input box -- room descriptions, help files, score screens, maps, whatever you want to test. Click <strong>Analyze &amp; Read Aloud</strong> to hear the screen reader simulation and see flagged issues, or <strong>Analyze Only</strong> to just see the results without audio. You can also populate the input box with one of the built-in examples that are quite common among MU* games.</p>
+  </div>
 
-  <details class="faq-item">
-    <summary><h3>How accurate is the voice simulation?</h3></summary>
-    <div class="faq-body">
-      <p>It approximates NVDA-style output at "all punctuation" verbosity, which is common for terminal and MUD use. Real screen readers vary -- JAWS, NVDA, and VoiceOver each handle symbols and pauses slightly differently. The audio uses your browser's speech synthesis, not an actual screen reader engine. Treat this as a close preview, not a perfect replica.</p>
-    </div>
-  </details>
+  <div class="faq-item">
+    <h3>How accurate is the voice simulation?</h3>
+    <p>It approximates NVDA-style output at "all punctuation" verbosity, which is common for terminal and MUD use. Real screen readers vary -- JAWS, NVDA, and VoiceOver each handle symbols and pauses slightly differently. The audio uses your browser's speech synthesis, not an actual screen reader engine. Treat this as a close preview, not a perfect replica.</p>
+  </div>
 
-  <details class="faq-item">
-    <summary><h3>What issues can't it detect?</h3></summary>
-    <div class="faq-body">
-      <p>This tool uses pattern-matching heuristics, not AI. It may miss unconventional ASCII art, catch false positives on text that happens to be symbol-heavy, or not flag issues with unusual formatting. It also doesn't evaluate color codes, ANSI escape sequences, or MUD protocol-level features like GMCP or MXP. It analyzes plain text only.</p>
-    </div>
-  </details>
+  <div class="faq-item">
+    <h3>What issues can't it detect?</h3>
+    <p>This tool uses pattern-matching heuristics, not AI. It may miss unconventional ASCII art, catch false positives on text that happens to be symbol-heavy, or not flag issues with unusual formatting. It also doesn't evaluate color codes, ANSI escape sequences, or MUD protocol-level features like GMCP or MXP. It analyzes plain text only.</p>
+  </div>
 
-  <details class="faq-item">
-    <summary><h3>What is a screen reader mode?</h3></summary>
-    <div class="faq-body">
-      <p>Screen reader mode is a feature that a game can offer to make its output more accessible. Instead of requiring content creators to avoid all ASCII art, tables, borders, and maps, the game itself can programmatically strip out or replace those elements for players who opt in. This means the visual experience stays intact for sighted players, while screen reader users get clean, readable text.</p>
-      <p>For real-world examples of how this can work in practice, see <a href="https://writing-games.org/accessibility-in-alter-epoch-mu/">this article</a>.</p>
-    </div>
-  </details>
+  <div class="faq-item">
+    <h3>What is a screen reader mode?</h3>
+    <p>Screen reader mode is a feature that a game can offer to make its output more accessible. Instead of requiring content creators to avoid all ASCII art, tables, borders, and maps, the game itself can programmatically strip out or replace those elements for players who opt in. This means the visual experience stays intact for sighted players, while screen reader users get clean, readable text.</p>
+    <p>For real-world examples of how this can work in practice, see <a href="https://writing-games.org/accessibility-in-alter-epoch-mu/">this article</a>.</p>
+  </div>
 
-  <details class="faq-item" id="faq-speech">
-    <summary><h3>Help! The read-aloud feature isn't working!</h3></summary>
-    <div class="faq-body">
-      <p>Speech synthesis depends on your browser and operating system. Make sure your browser is up to date for the best experience. Here's what to expect:</p>
-      <p><strong>Chrome / Edge:</strong> Best support. Voices load automatically. If speech cuts out on long text, this tool already works around that with chunked playback.</p>
-      <p><strong>Firefox:</strong> Works, but may use a different default voice. This tool pre-expands all symbols to spoken words before sending to the speech engine, so output should be consistent.</p>
-      <p><strong>Brave:</strong> Unfortunately, Brave's privacy protections block the Web Speech API, so read-aloud will not work. Text analysis still functions normally. Use Chrome or Firefox for speech.</p>
-      <p><strong>Safari:</strong> Works on macOS. Uses the system voices from System Settings &gt; Accessibility &gt; Spoken Content.</p>
-      <p><strong>Linux:</strong> Most desktop distributions include speech services out of the box. If speech isn't working, you may need to install <code>speech-dispatcher</code> and <code>espeak-ng</code>, then restart your browser.</p>
-    </div>
-  </details>
+  <div class="faq-item" id="faq-speech">
+    <h3>Help! The read-aloud feature isn't working!</h3>
+    <p>Speech synthesis depends on your browser and operating system. Make sure your browser is up to date for the best experience. Here's what to expect:</p>
+    <p><strong>Chrome / Edge:</strong> Best support. Voices load automatically. If speech cuts out on long text, this tool already works around that with chunked playback.</p>
+    <p><strong>Firefox:</strong> Works, but may use a different default voice. This tool pre-expands all symbols to spoken words before sending to the speech engine, so output should be consistent.</p>
+    <p><strong>Brave:</strong> Unfortunately, Brave's privacy protections block the Web Speech API, so read-aloud will not work. Text analysis still functions normally. Use Chrome or Firefox for speech.</p>
+    <p><strong>Safari:</strong> Works on macOS. Uses the system voices from System Settings &gt; Accessibility &gt; Spoken Content.</p>
+    <p><strong>Linux:</strong> Most desktop distributions include speech services out of the box. If speech isn't working, you may need to install <code>speech-dispatcher</code> and <code>espeak-ng</code>, then restart your browser.</p>
+  </div>
 
-  <details class="faq-item">
-    <summary><h3>I found a bug or have a suggestion.</h3></summary>
-    <div class="faq-body">
-      <p>I'd love to hear from you. Please <a href="https://writing-games.org/contact">submit your feedback here</a> with a description of the issue or your idea. If you can include the text that triggered the problem, that helps a lot. You can also drop by the <a href="https://writing-games.org/discord/">Writing Games Discord server</a> to share your feedback, if that's easier.</p>
-    </div>
-  </details>
+  <div class="faq-item">
+    <h3>I found a bug or have a suggestion.</h3>
+    <p>I'd love to hear from you. Please <a href="https://writing-games.org/contact">submit your feedback here</a> with a description of the issue or your idea. If you can include the text that triggered the problem, that helps a lot. You can also drop by the <a href="https://writing-games.org/discord/">Writing Games Discord server</a> to share your feedback, if that's easier.</p>
+  </div>
 
-  <details class="faq-item">
-    <summary><h3>What fonts does this page use?</h3></summary>
-    <div class="faq-body">
-      <p>This page uses <a href="https://fonts.google.com/specimen/Atkinson+Hyperlegible+Next">Atkinson Hyperlegible Next</a> for all readable text and <a href="https://fonts.google.com/specimen/Atkinson+Hyperlegible+Mono">Atkinson Hyperlegible Mono</a> for the input box and screen reader preview. Both were originally developed by the Braille Institute specifically to maximize character legibility for readers with low vision. Letterforms are designed so that similar characters (like l, 1, and I, or 0 and O) are easy to tell apart. These fonts are free, open-source, and a great choice for any accessibility-focused project.</p>
-    </div>
-  </details>
+  <div class="faq-item">
+    <h3>What fonts does this page use?</h3>
+    <p>This page uses <a href="https://fonts.google.com/specimen/Atkinson+Hyperlegible+Next">Atkinson Hyperlegible Next</a> for all readable text and <a href="https://fonts.google.com/specimen/Atkinson+Hyperlegible+Mono">Atkinson Hyperlegible Mono</a> for the input box and screen reader preview. Both were originally developed by the Braille Institute specifically to maximize character legibility for readers with low vision. Letterforms are designed so that similar characters (like l, 1, and I, or 0 and O) are easy to tell apart. These fonts are free, open-source, and a great choice for any accessibility-focused project.</p>
+  </div>
 </section>
 
 </main>
