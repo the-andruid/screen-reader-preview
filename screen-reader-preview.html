@@ -1,0 +1,1393 @@
+<!--
+  Screen Reader Preview by Andruid | writing-games.org
+  An open-source tool for previewing how text sounds when spoken aloud.
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src https://writing-games.org; connect-src 'none'; frame-src 'none';">
+<title>Screen Reader Preview - Writing Games</title>
+<meta name="description" content="Paste text to hear how it sounds when spoken aloud. Detects ASCII tables, maps, art, and decorative borders that cause accessibility problems in text games such as MUDs.">
+<meta name="keywords" content="screen reader, accessibility, MUD, text game, ASCII art, NVDA, JAWS, VoiceOver, a11y">
+<link rel="canonical" href="https://writing-games.org/screen-reader-preview">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Screen Reader Preview">
+<meta property="og:description" content="Hear how a screen reader reads your text. Detects ASCII tables, maps, art, and borders that cause accessibility problems in text games such as MUDs.">
+<meta property="og:url" content="https://writing-games.org/screen-reader-preview">
+<meta property="og:site_name" content="Writing Games">
+<meta property="og:image" content="https://writing-games.org/wp-content/uploads/2024/11/cropped-Writing-Games-D20-Icon-2025.png">
+
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Screen Reader Preview">
+<meta name="twitter:description" content="Hear how a screen reader reads your text. Detects ASCII tables, maps, art, and borders that cause accessibility problems in text games such as MUDs.">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebPage",
+      "name": "Screen Reader Preview",
+      "description": "Paste text to hear how it sounds when spoken aloud. Detects ASCII tables, maps, art, and decorative borders that cause accessibility problems in text games such as MUDs.",
+      "url": "https://writing-games.org/screen-reader-preview",
+      "isPartOf": {
+        "@type": "WebSite",
+        "name": "Writing Games",
+        "url": "https://writing-games.org"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "Writing Games",
+        "url": "https://writing-games.org"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What does this tool do?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The Screen Reader Preview does three things: it simulates how a screen reader would read a block of text aloud, flags certain problematic patterns in the text -- such as ASCII art and tables, and provides practical recommendations for improvement. It's not a panacea. Rather, it's meant to help familiarize people with some of the most common issues and solutions."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is a screen reader?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "A screen reader is a software program (assistive technology) that allows people with blindness or low vision to access content on their computer screen through a voice synthesizer or braille. The tool described here specifically aims to simulate the former -- the kind of screen reader that reads text aloud."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Why does this matter?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Things like ASCII art, maps, and decorative borders are very common in text-based games such as multi-user dungeons (MUDs), but they do not translate well into speech. A table that looks nice visually can sound like unhelpful gibberish when read aloud by a screen reader. Most people have never heard their content read aloud this way, so they don't realize how these things create barriers for players with visual disabilities."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I use it?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Paste any text into the input box -- room descriptions, help files, score screens, maps, whatever you want to test. Click Analyze & Read Aloud to hear the screen reader simulation and see flagged issues, or Analyze Only to just see the results without audio. You can also populate the input box with one of the built-in examples that are quite common among MU* games."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How accurate is the voice simulation?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It approximates NVDA-style output at \"all punctuation\" verbosity, which is common for terminal and MUD use. Real screen readers vary -- JAWS, NVDA, and VoiceOver each handle symbols and pauses slightly differently. The audio uses your browser's speech synthesis, not an actual screen reader engine. Treat this as a close preview, not a perfect replica."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What issues can't it detect?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "This tool uses pattern-matching heuristics, not AI. It may miss unconventional ASCII art, catch false positives on text that happens to be symbol-heavy, or not flag issues with unusual formatting. It also doesn't evaluate color codes, ANSI escape sequences, or MUD protocol-level features like GMCP or MXP. It analyzes plain text only."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is a screen reader mode?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Screen reader mode is a feature that a game can offer to make its output more accessible. Instead of requiring content creators to avoid all ASCII art, tables, borders, and maps, the game itself can programmatically strip out or replace those elements for players who opt in. This means the visual experience stays intact for sighted players, while screen reader users get clean, readable text. For real-world examples of how this can work in practice, see the article Accessibility in Alter Epoch MU at writing-games.org."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Help! The read-aloud feature isn't working!",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Speech synthesis depends on your browser and operating system. Make sure your browser is up to date for the best experience. Chrome and Edge have the best support. Firefox works but may use a different default voice. Brave's privacy protections block the Web Speech API, so use Chrome or Firefox instead. Safari works on macOS using system voices. On Linux, most desktop distributions include speech services out of the box. If speech isn't working, install speech-dispatcher and espeak-ng, then restart your browser."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "I found a bug or have a suggestion.",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "I'd love to hear from you. Please submit your feedback at writing-games.org/contact with a description of the issue or your idea. If you can include the text that triggered the problem, that helps a lot. You can also drop by the Writing Games Discord server to share your feedback, if that's easier."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What fonts does this page use?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "This page uses Atkinson Hyperlegible Next for all readable text and Atkinson Hyperlegible Mono for the input box and screen reader preview. Both were originally developed by the Braille Institute specifically to maximize character legibility for readers with low vision. Letterforms are designed so that similar characters (like l, 1, and I, or 0 and O) are easy to tell apart. These fonts are free, open-source, and a great choice for any accessibility-focused project."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
+
+<link rel="icon" type="image/png" href="https://writing-games.org/wp-content/uploads/2024/11/cropped-Writing-Games-D20-Icon-2025.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:ital,wght@0,400;0,700;1,400&family=Atkinson+Hyperlegible+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+
+  /* --- Base & layout --- */
+  html { font-size: 20px; }
+  *, *::before, *::after { box-sizing: border-box; }
+  body {
+    font-family: 'Atkinson Hyperlegible Next', system-ui, sans-serif;
+    max-width: 55rem;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+    background: #eef0f3;
+    color: #272727;
+    line-height: 1.6;
+    font-size: 1rem;
+  }
+  .site-footer {
+    margin-top: 2.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid #dee2e6;
+    font-size: 0.85rem;
+    color: #272727;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .site-footer a { color: #272727; }
+  .site-footer a:hover { color: #004da3; }
+  .site-footer img { height: 1rem; width: 1rem; vertical-align: middle; }
+  h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+    color: #212529;
+  }
+  .subtitle { color: #272727; margin-bottom: 1.5rem; font-size: 0.95rem; }
+  .subtitle a { color: #004da3; }
+
+  /* --- Accessibility helpers --- */
+  .skip-link {
+    position: absolute;
+    left: -9999px;
+    top: 0;
+    padding: 0.5rem 1rem;
+    background: #084298;
+    color: #fff;
+    z-index: 100;
+    font-size: 0.9rem;
+  }
+  .skip-link:focus { left: 0; }
+  :focus-visible {
+    outline: 2px solid #0d6efd;
+    outline-offset: 2px;
+  }
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+  .noscript-msg {
+    background: #f8d7da;
+    color: #721c24;
+    padding: 1rem;
+    border-radius: 6px;
+    margin-bottom: 1.5rem;
+    font-weight: 500;
+  }
+
+  /* --- Input & toolbar --- */
+  textarea {
+    width: 100%;
+    min-height: 11rem;
+    padding: 0.75rem;
+    font-family: 'Atkinson Hyperlegible Mono', 'Courier New', monospace;
+    font-size: 0.875rem;
+    border: none;
+    border-radius: 6px 6px 0 0;
+    resize: vertical;
+    tab-size: 4;
+    white-space: pre;
+  }
+  textarea:focus { outline: none; }
+  .input-group {
+    border: 2px solid #888;
+    border-radius: 6px;
+    overflow: hidden;
+    margin-bottom: 1rem;
+    background: #fff;
+  }
+  .input-group:focus-within { border-color: #0d6efd; }
+  .input-toolbar {
+    display: flex;
+    gap: 0.75rem;
+    padding: 0.5rem 0.75rem;
+    background: #e9ecef;
+    border-top: 1px solid #ccc;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .controls {
+    display: flex;
+    gap: 0.5rem;
+    margin: 0 0 1rem;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  /* --- Buttons --- */
+  button {
+    padding: 0.5rem 1.25rem;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    font-weight: 500;
+  }
+  .btn-primary { background: #0f5132; color: #fff; }
+  .btn-secondary { background: #084298; color: #fff; }
+  .btn-stop { background: #6c757d; color: #fff; }
+  .btn-stop:disabled { opacity: 0.5; cursor: not-allowed; }
+  .btn-stop.active { background: #a82030; opacity: 1; cursor: pointer; }
+  .btn-danger { background: #a82030; color: #fff; }
+  .btn-primary:hover, .btn-secondary:hover, .btn-danger:hover {
+    background-image: linear-gradient(rgb(0 0 0 / 0.2), rgb(0 0 0 / 0.2));
+  }
+  .btn-primary:disabled, .btn-secondary:disabled, .btn-danger:disabled {
+    opacity: 0.6; cursor: not-allowed;
+  }
+  label.rate { font-size: 0.85rem; color: #474747; }
+  label.rate input { width: 3rem; }
+  .input-toolbar select {
+    padding: 0.25rem 0.4rem;
+    border: 1px solid #bbb;
+    border-radius: 4px;
+    background: #fff;
+    font-size: 0.8rem;
+    font-family: inherit;
+    color: #333;
+  }
+  .speed-group {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+  .speed-group .rate-val {
+    font-size: 0.8rem;
+    color: #474747;
+    min-width: 1.5em;
+    text-align: center;
+  }
+
+  /* --- Status & results --- */
+  .speech-status {
+    font-size: 0.85rem;
+    padding: 0.4rem 0.75rem;
+    border-radius: 4px;
+    display: none;
+  }
+  .speech-status.speaking { display: inline-block; background: #d4edda; color: #145021; }
+  .speech-status.error { display: inline-block; background: #f8d7da; color: #721c24; }
+  .speech-status.loading { display: inline-block; background: #fff3cd; color: #664d03; }
+
+  .results { margin-top: 1.5rem; }
+  .issue {
+    background: #fff;
+    border-left: 4px solid #a82030;
+    border-radius: 4px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  }
+  .issue h3 { margin: 0 0 0.5rem; font-size: 1rem; color: #a82030; }
+  .issue.warning { border-left-color: #e6a817; }
+  .issue.warning h3 { color: #664d00; }
+  .issue.info { border-left-color: #0d6efd; }
+  .issue.info h3 { color: #084298; }
+  .issue p { margin: 0.3rem 0; font-size: 0.9rem; }
+  .issue pre {
+    background: #f1f3f5;
+    padding: 0.5rem;
+    border-radius: 4px;
+    overflow-x: auto;
+    font-family: 'Atkinson Hyperlegible Mono', 'Courier New', monospace;
+    font-size: 0.8rem;
+    white-space: pre-wrap;
+    word-break: break-all;
+  }
+  .issue .suggestion {
+    background: #e8f5e9;
+    padding: 0.5rem;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    margin-top: 0.5rem;
+  }
+
+  /* --- Screen reader preview panel --- */
+  .sr-preview {
+    background: #000;
+    color: #e0e0e0;
+    padding: 1rem;
+    border-radius: 6px;
+    font-family: 'Atkinson Hyperlegible Mono', 'Courier New', monospace;
+    font-size: 0.85rem;
+    white-space: pre-wrap;
+    word-break: break-word;
+    max-height: 15rem;
+    overflow-y: auto;
+    margin-top: 1rem;
+  }
+  .sr-preview .label { color: #aaa; font-style: italic; }
+  .no-issues {
+    background: #e8f5e9;
+    padding: 1rem;
+    border-radius: 6px;
+    color: #1a5c20;
+    font-weight: 500;
+  }
+
+  /* --- Example buttons --- */
+  .example-btns { margin-bottom: 0.75rem; }
+  .example-btns > span { font-size: 0.85rem; color: #474747; }
+  .example-btns button {
+    padding: 0.3rem 0.75rem;
+    font-size: 0.8rem;
+    background: #fff;
+    color: #333;
+    border: 1px solid #aaa;
+    border-radius: 4px;
+  }
+  .example-btns button:hover { background: #e2e4e7; }
+  
+  /* --- FAQs --- */
+  .faq-section code {
+    background: #f1f3f5;
+    padding: 0.1rem 0.3rem;
+    border-radius: 3px;
+    font-family: 'Atkinson Hyperlegible Mono', 'Courier New', monospace;
+    font-size: 0.8rem;
+  }
+  .faq-section {
+    margin-top: 2rem;
+    font-size: 0.85rem;
+    padding: 2rem;
+  }
+  .faq-section h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #212529;
+    margin: 0 0 0.5rem;
+  }
+  .faq-item {
+    border-top: 1px solid #eee;
+  }
+  .faq-item summary {
+    cursor: pointer;
+    padding: 0.5rem 0;
+  }
+  .faq-item summary h3 {
+    display: inline;
+    font-size: inherit;
+    font-weight: 600;
+    color: #333;
+    margin: 0;
+  }
+  .faq-item .faq-body {
+    padding: 0 0 0.5rem;
+    color: #474747;
+    line-height: 1.6;
+  }
+  .faq-item .faq-body p { margin: 0.3rem 0; }
+  .faq-item .faq-body a { color: #004da3; }
+</style>
+</head>
+<body>
+
+<a class="skip-link" href="#input">Skip to input</a>
+
+<main id="main" role="main">
+
+<h1>Screen Reader Preview</h1>
+<p class="subtitle">Paste text to hear how it sounds when spoken aloud. Get instant accessibility recommendations. <a href="#faq">How It Works</a></p>
+
+<noscript><div class="noscript-msg">This tool requires JavaScript to function. Please enable JavaScript in your browser settings.</div></noscript>
+
+<div class="example-btns" role="group" aria-label="Load example text">
+  <span>Load example:</span>
+  <button onclick="loadExample('table')">ASCII Table</button>
+  <button onclick="loadExample('art')">ASCII Art</button>
+  <button onclick="loadExample('border')">Decorative Border</button>
+  <button onclick="loadExample('map')">MUD Map</button>
+  <button onclick="loadExample('columns')">Text Columns</button>
+</div>
+
+<label for="input" class="sr-only">Text to analyze</label>
+<div class="input-group">
+  <textarea id="input" placeholder="Paste your text here..." spellcheck="false"></textarea>
+  <div class="input-toolbar">
+    <span class="speed-group"><label class="rate" for="rate">Speed:</label> <input type="range" id="rate" min="0.5" max="2" step="0.1" value="1"><span id="rateVal" class="rate-val">1.0</span></span>
+    <label class="rate" for="punctLevel">Punctuation:</label>
+    <select id="punctLevel">
+      <option value="all" selected>All (NVDA default for terminals)</option>
+      <option value="some">Some (flowing text mode)</option>
+    </select>
+    <label class="rate" for="voiceSelect">Voice:</label> <select id="voiceSelect"><option value="">Loading...</option></select>
+  </div>
+</div>
+<div class="controls">
+  <button class="btn-primary" onclick="analyze()" id="analyzeBtn">Analyze &amp; Read Aloud</button>
+  <button class="btn-secondary" onclick="analyzeOnly()">Analyze Only</button>
+  <button class="btn-stop" onclick="stopSpeech()" id="stopBtn" disabled>Stop Reading</button>
+  <span id="speechStatus" class="speech-status"></span>
+</div>
+
+<div id="srPreview" aria-live="polite"></div>
+<div id="results" class="results" aria-live="polite"></div>
+
+<script>
+const rateSlider = document.getElementById('rate');
+const rateVal = document.getElementById('rateVal');
+const speechStatus = document.getElementById('speechStatus');
+rateSlider.addEventListener('input', () => rateVal.textContent = parseFloat(rateSlider.value).toFixed(1));
+
+// --- Speech setup ---
+// Chrome lazily loads voices; we must wait for them.
+let voicesReady = false;
+let voiceList = [];
+const voiceSelect = document.getElementById('voiceSelect');
+
+function loadVoices() {
+  voiceList = window.speechSynthesis.getVoices();
+  if (voiceList.length > 0) {
+    voicesReady = true;
+    populateVoiceList();
+  }
+}
+
+function populateVoiceList() {
+  const prev = voiceSelect.value;
+  voiceSelect.innerHTML = '';
+
+  // Pick up to 5 English (US/UK) voices that best represent screen reader output.
+  // Priority: eSpeak > Microsoft David/Zira/Mark > any en-US > any en-GB
+  const english = voiceList.filter(v => /^en[-_]/i.test(v.lang) || v.lang === 'en');
+
+  const priority = [
+    v => /espeak/i.test(v.name),                           // eSpeak — closest to NVDA default
+    v => /\b(david|mark)\b/i.test(v.name),                 // Microsoft male — common NVDA/JAWS
+    v => /\b(zira|hazel)\b/i.test(v.name),                 // Microsoft female — common JAWS
+    v => /en[-_]US/i.test(v.lang),                         // Any American English
+    v => /en[-_]GB/i.test(v.lang),                         // Any British English
+  ];
+
+  const picked = [];
+  const used = new Set();
+  for (const test of priority) {
+    for (const v of english) {
+      if (!used.has(v.voiceURI) && test(v)) {
+        picked.push(v);
+        used.add(v.voiceURI);
+        if (picked.length >= 5) break;
+      }
+    }
+    if (picked.length >= 5) break;
+  }
+
+  // If we still have fewer than 5, fill with remaining English voices
+  if (picked.length < 5) {
+    for (const v of english) {
+      if (!used.has(v.voiceURI)) {
+        picked.push(v);
+        used.add(v.voiceURI);
+        if (picked.length >= 5) break;
+      }
+    }
+  }
+
+  if (picked.length === 0) {
+    voiceSelect.innerHTML = '<option value="">No voices available</option>';
+    return;
+  }
+
+  for (const v of picked) {
+    const opt = document.createElement('option');
+    opt.value = v.voiceURI;
+    opt.textContent = v.name;
+    voiceSelect.appendChild(opt);
+  }
+
+  if (prev && [...voiceSelect.options].some(o => o.value === prev)) {
+    voiceSelect.value = prev;
+  }
+}
+
+function getSelectedVoice() {
+  const uri = voiceSelect.value;
+  return voiceList.find(v => v.voiceURI === uri) || null;
+}
+
+loadVoices();
+if (window.speechSynthesis.onvoiceschanged !== undefined) {
+  window.speechSynthesis.onvoiceschanged = loadVoices;
+}
+// Some browsers need a second kick
+setTimeout(loadVoices, 250);
+setTimeout(loadVoices, 1000);
+
+function setStatus(msg, cls, html) {
+  if (html) speechStatus.innerHTML = msg;
+  else speechStatus.textContent = msg;
+  speechStatus.className = 'speech-status ' + cls;
+}
+function clearStatus() {
+  speechStatus.textContent = '';
+  speechStatus.className = 'speech-status';
+}
+
+const EXAMPLES = {
+  table: `+----------+--------+-------+
+| Name     | Class  | Level |
++----------+--------+-------+
+| Gandalf  | Wizard |    20 |
+| Aragorn  | Ranger |    18 |
+| Legolas  | Archer |    17 |
++----------+--------+-------+`,
+
+  art: `    /\\
+   /  \\
+  / ** \\
+ /______\\
+   |  |
+   |  |
+  /|  |\\
+ / |  | \\
+*--*--*--*
+
+  ___________
+ < Hello MUD >
+  -----------
+        \\   ^__^
+         \\  (oo)\\_______
+            (__)\\       )\\/\\
+                ||----w |
+                ||     ||`,
+
+  border: `*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*
+~                               ~
+*   Welcome to Dragon's Keep!   *
+~   Est. 1997 - Adventure MUD   ~
+*                               *
+~*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~
+
+========================================
+||    ANNOUNCEMENTS - March 2026      ||
+========================================
+|| * Double XP weekend starts Friday  ||
+|| * New dungeon zone: Frost Caverns  ||
+|| * Guild recruitment open           ||
+========================================`,
+
+  map: `    [ Forest ]---[ River ]---[ Bridge ]
+        |            |           |
+    [ Cave  ]   [ Falls ]   [ Tower ]
+        |                       |
+    [ Mine  ]---[ Road  ]---[ Castle]
+
+Legend: [ ] = Room, --- = Path, | = Path
+
+Or a symbol-style map:
+    *---#---&
+    |       |
+    @---o---x
+
+   N
+W + E
+   S`,
+
+  columns: `Damage Descriptors (highest to lowest):
+Cataclysmic      Crushing         Moderate
+Devastating      Mighty           Light
+Obliterating     Heavy            Faint
+Annihilating     Solid            Trivial
+Brutal           Glancing         Insignificant`,
+
+};
+
+function loadExample(key) {
+  document.getElementById('input').value = EXAMPLES[key] || '';
+}
+
+// --- Detection logic ---
+
+function detectAsciiTable(text) {
+  const lines = text.split('\n');
+  const issues = [];
+
+  // Detect pipe-delimited tables
+  const pipeLines = lines.filter(l => (l.match(/\|/g) || []).length >= 2);
+  const separatorLines = lines.filter(l => /^[\s|+\-=:]+$/.test(l) && l.includes('-'));
+
+  if (pipeLines.length >= 2 && separatorLines.length >= 1) {
+    const start = lines.indexOf(pipeLines[0]);
+    const end = lines.indexOf(pipeLines[pipeLines.length - 1]);
+    const tableBlock = lines.slice(start, end + 1).join('\n');
+
+    // Try to extract cell content
+    const dataRows = pipeLines.filter(l => !/^[\s|+\-=:]+$/.test(l));
+    const parsed = dataRows.map(row =>
+      row.split('|').map(c => c.trim()).filter(c => c.length > 0)
+    );
+
+    let readable = '';
+    // Build a cleaned version with borders stripped
+    let cleaned = '';
+    if (parsed.length > 0) {
+      cleaned = parsed.map(row => row.join('  ')).join('\n');
+    }
+
+    issues.push({
+      type: 'error',
+      title: 'ASCII Table Detected',
+      detail: 'Screen readers will read each character of the table borders (pipes, dashes, plus signs) aloud, making the data incomprehensible.',
+      snippet: tableBlock,
+      suggestion: cleaned
+        ? `For content creators: Remove the borders so each row reads naturally left to right:\n${cleaned}\nAvoid tables with more than 3 columns or where the data doesn't make sense read left to right.\n\nFor developers: Consider a screen-reader mode that programmatically strips table borders from output.`
+        : 'For content creators: Remove the table borders (pipes, dashes, plus signs). The data is often understandable without them when read left to right.\n\nFor developers: Consider a screen-reader mode that programmatically strips table borders from output.',
+    });
+  }
+
+  // Detect +---+ style box tables without pipes in content
+  const boxBorders = lines.filter(l => /^\s*\+[-=+]+\+\s*$/.test(l));
+  if (boxBorders.length >= 2 && pipeLines.length < 2) {
+    const first = lines.indexOf(boxBorders[0]);
+    const last = lines.indexOf(boxBorders[boxBorders.length - 1]);
+    issues.push({
+      type: 'error',
+      title: 'Box-Drawing Table Detected',
+      detail: 'A screen reader will read "plus dash dash dash plus..." for every border line.',
+      snippet: lines.slice(first, last + 1).join('\n'),
+      suggestion: 'For content creators: Remove the box-drawing characters. The data reads fine without them when read left to right.\n\nFor developers: Consider a screen-reader mode that programmatically strips box-drawing characters from output.',
+    });
+  }
+
+  return issues;
+}
+
+function detectAsciiArt(text) {
+  const lines = text.split('\n');
+  const issues = [];
+
+  // Characters commonly used in ASCII art but not normal prose
+  const artChars = /[/\\|_\-~*^<>{}()\[\]#@=+.,:;!]/g;
+
+  // Score each line for "art-ness"
+  const artLines = [];
+  let runStart = -1;
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    if (line.trim().length === 0) {
+      if (runStart !== -1 && artLines.length >= 3) break;
+      if (artLines.length < 3) { artLines.length = 0; runStart = -1; }
+      continue;
+    }
+
+    const stripped = line.replace(/\s/g, '');
+    if (stripped.length === 0) continue;
+
+    const letterCount = (stripped.match(/[a-zA-Z0-9]/g) || []).length;
+    const ratio = letterCount / stripped.length;
+
+    // If more than 60% is non-alphanumeric and line has structural chars
+    const hasStructural = /[/\\|_^<>{}#@]/.test(stripped);
+    if (ratio < 0.4 && hasStructural && stripped.length > 3) {
+      if (runStart === -1) runStart = i;
+      artLines.push(i);
+    } else {
+      if (artLines.length >= 3) break;
+      artLines.length = 0;
+      runStart = -1;
+    }
+  }
+
+  // Also detect via consecutive lines with leading whitespace forming shapes
+  if (artLines.length < 3) {
+    artLines.length = 0;
+    runStart = -1;
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i];
+      const stripped = line.replace(/\s/g, '');
+      if (stripped.length === 0) continue;
+      const hasLeadingSpaces = line.length - line.trimStart().length > 3;
+      const artish = (stripped.match(/[/\\|_*^#@~=+<>]/g) || []).length;
+      if (hasLeadingSpaces && artish / stripped.length > 0.5 && stripped.length >= 2) {
+        if (runStart === -1) runStart = i;
+        artLines.push(i);
+      } else {
+        if (artLines.length >= 3) break;
+        artLines.length = 0;
+        runStart = -1;
+      }
+    }
+  }
+
+  if (artLines.length >= 3) {
+    const snippet = artLines.map(i => lines[i]).join('\n');
+    issues.push({
+      type: 'error',
+      title: 'ASCII Art Detected',
+      detail: 'A screen reader will read every symbol character by character ("slash, backslash, asterisk, underscore..."). This is meaningless and frustrating for listeners.',
+      snippet: snippet,
+      suggestion: 'For content creators: Replace ASCII art with a text description, e.g. "[A house-shaped building]" or "[A cow saying hello]".\n\nFor developers: Consider a screen-reader mode that replaces or hides ASCII art, or lets builders attach alt-text descriptions.',
+    });
+  }
+
+  return issues;
+}
+
+function detectDecorativeBorders(text) {
+  const lines = text.split('\n');
+  const issues = [];
+
+  const borderPatterns = [
+    { re: /^[\s]*[*~=\-#]{5,}[\s]*$/, name: 'repeated symbols' },
+    { re: /^[\s]*([*~=\-#.])\1{4,}[\s]*$/, name: 'single repeated char' },
+    { re: /^[\s]*(([*~=\-#. ]){2,})\2{2,}[\s]*$/, name: 'repeating pattern' },
+    { re: /^[\s]*\|{2}\s.*\s\|{2}[\s]*$/, name: 'double-pipe border' },
+  ];
+
+  const borderLines = [];
+  for (let i = 0; i < lines.length; i++) {
+    for (const pat of borderPatterns) {
+      if (pat.re.test(lines[i]) && lines[i].trim().length >= 5) {
+        borderLines.push({ line: i, text: lines[i], type: pat.name });
+        break;
+      }
+    }
+  }
+
+  if (borderLines.length >= 2) {
+    const snippet = borderLines.slice(0, 4).map(b => b.text).join('\n');
+    const contentBetween = [];
+    if (borderLines.length >= 2) {
+      const start = borderLines[0].line;
+      const end = borderLines[borderLines.length - 1].line;
+      for (let i = start; i <= end; i++) {
+        const isB = borderLines.some(b => b.line === i);
+        if (!isB && lines[i].trim()) {
+          let cleaned = lines[i].replace(/^[\s|*~#=]+/, '').replace(/[\s|*~#=]+$/, '').trim();
+          if (cleaned) contentBetween.push(cleaned);
+        }
+      }
+    }
+
+    issues.push({
+      type: 'error',
+      title: 'Decorative ASCII Borders Detected',
+      detail: 'Decorative borders made of repeated characters (*, ~, =, etc.) will be read symbol-by-symbol, e.g. "asterisk tilde asterisk tilde asterisk..."',
+      snippet: snippet,
+      suggestion: contentBetween.length
+        ? `For content creators: Remove the borders and keep the content:\n${contentBetween.join('\n')}\n\nFor developers: Consider a screen-reader mode that strips decorative borders from output.`
+        : 'For content creators: Remove decorative borders, or replace with a simple heading or separator.\n\nFor developers: Consider a screen-reader mode that strips decorative borders from output.',
+    });
+  }
+
+  return issues;
+}
+
+function detectAsciiMap(text) {
+  const lines = text.split('\n');
+  const issues = [];
+
+  // Pattern 1: [Room Name] connected by --- or |
+  const bracketRoomLines = lines.filter(l =>
+    /\[.{1,20}\]/.test(l) && (/---/.test(l) || /\|/.test(l) || /\[.+\].*\[.+\]/.test(l))
+  );
+
+  const connectorLines = lines.filter(l => {
+    const stripped = l.trim();
+    return /^[\s|+\-\[\]]*$/.test(stripped) && /\|/.test(stripped) && stripped.length > 1;
+  });
+
+  // Pattern 2: Symbol-node maps like *--& or [*]--[&] or (#)--(#)
+  // Look for lines with short nodes connected by -- with vertical | connectors between
+  const symbolNodeRe = /(\[.\]|\(.\)|[*&#@oOxX#.])\s*--+\s*(\[.\]|\(.\)|[*&#@oOxX#.])/;
+  const symbolMapLines = lines.filter(l => symbolNodeRe.test(l));
+  const symbolConnectorLines = lines.filter(l => {
+    const stripped = l.trim();
+    return /^[\s|]*$/.test(stripped) && /\|/.test(stripped);
+  });
+
+  const hasBracketMap = bracketRoomLines.length >= 2 || (bracketRoomLines.length >= 1 && connectorLines.length >= 1);
+  const hasSymbolMap = symbolMapLines.length >= 2 || (symbolMapLines.length >= 1 && symbolConnectorLines.length >= 1);
+
+  if (hasBracketMap || hasSymbolMap) {
+    const allMapLineIdxs = [];
+    for (let i = 0; i < lines.length; i++) {
+      if (/\[.{1,20}\]/.test(lines[i]) || symbolNodeRe.test(lines[i]) ||
+          (/^[\s|+\-]*$/.test(lines[i].trim()) && lines[i].trim().length > 0)) {
+        allMapLineIdxs.push(i);
+      }
+    }
+    const snippet = allMapLineIdxs.slice(0, 8).map(i => lines[i]).join('\n');
+
+    // Extract room names from bracketed maps
+    const rooms = [];
+    const roomRe = /\[([^\]]{2,20})\]/g;
+    let m;
+    for (const line of lines) {
+      while ((m = roomRe.exec(line)) !== null) {
+        rooms.push(m[1].trim());
+      }
+    }
+
+    let suggestion = 'For content creators: Replace the visual map with a text description of connections.\n\nFor developers: Consider a screen-reader mode that substitutes maps with auto-generated text descriptions of connections.';
+    if (rooms.length >= 2) {
+      suggestion = `For content creators: Describe the map as a list of connections, for example:\nRooms: ${rooms.join(', ')}.\nThen list connections like: "${rooms[0]} connects east to ${rooms[1] || 'next room'}."\n\nFor developers: Consider a screen-reader mode that replaces visual maps with auto-generated connection descriptions.`;
+    } else if (hasSymbolMap) {
+      suggestion = 'For content creators: Symbol-based maps are entirely visual and convey no meaning when read aloud. Replace with a text description of connections, e.g. "The inn connects east to the market and south to the well."\n\nFor developers: Consider a screen-reader mode that replaces visual maps with text descriptions of connections.';
+    }
+
+    issues.push({
+      type: 'error',
+      title: 'ASCII Map Detected',
+      detail: 'Visual maps using symbols and connectors are spatial and cannot be understood linearly. A screen reader will read each symbol and dash individually, conveying no spatial meaning.',
+      snippet: snippet,
+      suggestion: suggestion,
+    });
+  }
+
+  return issues;
+}
+
+function detectAlignedColumns(text) {
+  const lines = text.split('\n').filter(l => l.trim().length > 0);
+  const issues = [];
+
+  if (lines.length < 3) return issues;
+
+  // Detect columns by finding consistent multi-space gaps
+  const gapPositions = [];
+  for (const line of lines) {
+    const gaps = [];
+    const re = /\s{2,}/g;
+    let m;
+    while ((m = re.exec(line)) !== null) {
+      if (m.index > 0 && m.index + m[0].length < line.length) {
+        gaps.push(m.index);
+      }
+    }
+    gapPositions.push(gaps);
+  }
+
+  // Find gap positions that appear in most lines (within +/-2 chars)
+  if (gapPositions.length < 3) return issues;
+
+  const allGaps = gapPositions.flat();
+  const clusters = [];
+  const sorted = [...new Set(allGaps)].sort((a, b) => a - b);
+
+  for (const pos of sorted) {
+    let matchCount = 0;
+    for (const lineGaps of gapPositions) {
+      if (lineGaps.some(g => Math.abs(g - pos) <= 2)) matchCount++;
+    }
+    if (matchCount >= lines.length * 0.6) {
+      if (!clusters.some(c => Math.abs(c - pos) <= 3)) {
+        clusters.push(pos);
+      }
+    }
+  }
+
+  // Already caught by table detection if pipes present
+  const hasPipes = lines.some(l => l.includes('|'));
+
+  if (clusters.length >= 2 && !hasPipes && lines.length >= 3) {
+    issues.push({
+      type: 'error',
+      title: 'Space-Aligned Columns Detected',
+      detail: 'Text arranged in columns using spaces is read left-to-right, line by line. A sighted reader knows to read down each column before moving right, but a screen reader cannot detect columns — it reads across, scrambling the intended order. For example, "Cataclysmic, Crushing, Moderate" instead of "Cataclysmic, Devastating, Obliterating..."',
+      snippet: lines.slice(0, 5).join('\n'),
+      suggestion: 'For content creators: Present items in a single-column list so the reading order matches the intended order. For example:\nCataclysmic, Devastating, Obliterating, Annihilating, Brutal, Crushing, ...\n\nFor developers: Consider a screen-reader mode that re-flows multi-column layouts into a single column.',
+    });
+  }
+
+  return issues;
+}
+
+function detectExcessiveSymbols(text) {
+  const issues = [];
+  const total = text.replace(/\s/g, '').length;
+  if (total < 10) return issues;
+
+  const symbolChars = text.replace(/\s/g, '').replace(/[a-zA-Z0-9.,!?;:'"()\-]/g, '');
+  const ratio = symbolChars.length / total;
+
+  if (ratio > 0.35) {
+    // Build a cleaned version
+    const cleaned = text.split('\n').map(line => {
+      // Remove lines that are purely decorative
+      const stripped = line.replace(/\s/g, '');
+      if (stripped.length === 0) return '';
+      const letters = (stripped.match(/[a-zA-Z0-9]/g) || []).length;
+      if (letters / stripped.length < 0.2 && stripped.length > 3) return '';
+      // Strip leading/trailing decorative chars
+      return line.replace(/^[\s*~=\-|#+<>\\/{}\[\]@^]+/, '').replace(/[\s*~=\-|#+<>\\/{}\[\]@^]+$/, '').trim();
+    }).filter(l => l.length > 0).join('\n');
+
+    if (cleaned.length < text.length * 0.8) {
+      issues.push({
+        type: 'info',
+        title: 'High Symbol-to-Text Ratio',
+        detail: `About ${Math.round(ratio * 100)}% of non-space characters are symbols. Screen readers announce each symbol name, making this very verbose.`,
+        snippet: null,
+        suggestion: `Stripped version (decorative characters removed):\n${cleaned || '(No meaningful text content found)'}\n\nFor developers: Consider a screen-reader mode that strips decorative characters automatically.`
+      });
+    }
+  }
+
+  return issues;
+}
+
+// --- Screen reader simulation ---
+// Emulates NVDA/JAWS symbol-level "all" verbosity, which is typical for
+// terminal/MUD output. NVDA collapses runs of the same symbol into
+// "N <symbol>" (e.g. "17 dash") which we replicate here.
+
+const SYMBOL_NAMES = {
+  '|': 'vertical bar', '\\': 'backslash', '/': 'slash',
+  '+': 'plus', '-': 'dash', '=': 'equals', '_': 'underscore',
+  '*': 'asterisk', '~': 'tilde', '#': 'hash', '@': 'at',
+  '^': 'caret', '<': 'less than', '>': 'greater than',
+  '{': 'left brace', '}': 'right brace', '[': 'left bracket',
+  ']': 'right bracket', '(': 'left paren', ')': 'right paren',
+  '`': 'backtick', '&': 'ampersand', '%': 'percent',
+  '$': 'dollar', '\'': 'apostrophe', '"': 'quote',
+};
+
+// NVDA at "all" punctuation level reads every symbol. At "some" level it
+// skips common punctuation in flowing text but still reads structural chars.
+// We default to "all" to show worst-case, with a toggle for "some".
+const SKIP_AT_SOME = new Set(['.', ',', ':', ';', '!', '?', '\'', '"']);
+
+function simulateScreenReader(text, punctuationLevel) {
+  const level = punctuationLevel || 'all';
+  const lines = text.split('\n');
+  let output = '';
+
+  for (const line of lines) {
+    if (line.trim().length === 0) {
+      output += 'blank\n';
+      continue;
+    }
+    output += expandLine(line, level) + '\n';
+  }
+  return output;
+}
+
+function expandLine(line, level) {
+  const tokens = [];
+  let i = 0;
+
+  while (i < line.length) {
+    const ch = line[i];
+
+    // Whitespace: collapse to single space
+    if (/\s/.test(ch)) {
+      i++;
+      while (i < line.length && /\s/.test(line[i])) i++;
+      if (tokens.length > 0) tokens.push(' ');
+      continue;
+    }
+
+    // Alphanumeric word
+    if (/[a-zA-Z0-9]/.test(ch)) {
+      let word = '';
+      while (i < line.length && /[a-zA-Z0-9']/.test(line[i])) {
+        word += line[i];
+        i++;
+      }
+      tokens.push(word);
+      continue;
+    }
+
+    // Symbol character — check for runs of the same symbol (NVDA compression)
+    const name = SYMBOL_NAMES[ch];
+    if (name) {
+      let runLen = 0;
+      const startI = i;
+      while (i < line.length && line[i] === ch) { runLen++; i++; }
+
+      if (level === 'some' && SKIP_AT_SOME.has(ch) && runLen === 1) {
+        // At "some" level, single common punctuation is skipped in flowing text
+        tokens.push(ch === '.' ? '. ' : ch === ',' ? ', ' : ' ');
+      } else if (runLen >= 3) {
+        // NVDA collapses: "17 dash" instead of "dash dash dash..."
+        tokens.push(`${runLen} ${name}`);
+      } else {
+        for (let r = 0; r < runLen; r++) tokens.push(name);
+      }
+    } else {
+      // Unknown symbol, read literally
+      tokens.push(ch);
+      i++;
+    }
+  }
+
+  return tokens.join(' ').replace(/ +/g, ' ').trim();
+}
+
+// --- Main functions ---
+
+function analyze() {
+  const text = document.getElementById('input').value;
+  if (!text.trim()) return;
+  const simulated = runAnalysis(text);
+  speak(simulated);
+}
+
+function analyzeOnly() {
+  const text = document.getElementById('input').value;
+  if (!text.trim()) return;
+  runAnalysis(text);
+}
+
+function runAnalysis(text) {
+  const allIssues = [
+    ...detectAsciiTable(text),
+    ...detectDecorativeBorders(text),
+    ...detectAsciiMap(text),
+    ...detectAsciiArt(text),
+    ...detectAlignedColumns(text),
+    ...detectExcessiveSymbols(text),
+  ];
+
+  // Deduplicate by title
+  const seen = new Set();
+  let issues = allIssues.filter(i => {
+    if (seen.has(i.title)) return false;
+    seen.add(i.title);
+    return true;
+  });
+
+  // If ASCII art is detected, suppress table/border/map issues whose
+  // snippet lines overlap with the art snippet — these are false positives
+  // caused by symbols within the art matching other detectors.
+  const artIssue = issues.find(i => i.title === 'ASCII Art Detected');
+  if (artIssue && artIssue.snippet) {
+    const artLines = new Set(artIssue.snippet.split('\n').map(l => l.trim()).filter(Boolean));
+    const suppressible = new Set([
+      'ASCII Table Detected', 'Box-Drawing Table Detected',
+      'Decorative ASCII Borders Detected', 'ASCII Map Detected'
+    ]);
+    issues = issues.filter(i => {
+      if (!suppressible.has(i.title) || !i.snippet) return true;
+      const lines = i.snippet.split('\n').map(l => l.trim()).filter(Boolean);
+      const overlap = lines.some(l => artLines.has(l));
+      return !overlap;
+    });
+  }
+
+  // Screen reader preview — use the selected punctuation level
+  const level = document.getElementById('punctLevel').value;
+  const preview = simulateScreenReader(text, level);
+  document.getElementById('srPreview').innerHTML =
+    `<div class="sr-preview"><span class="label">-- Screen Reader Preview (NVDA-style, punctuation: ${escHtml(level)}) --</span>\n${escHtml(preview)}</div>`;
+
+  // Issues
+  const resultsDiv = document.getElementById('results');
+  if (issues.length === 0) {
+    resultsDiv.innerHTML = '<div class="no-issues">No major accessibility issues detected. The text appears relatively screen-reader friendly.</div>';
+    return preview;
+  }
+
+  resultsDiv.innerHTML = `<h2 style="font-size:1.1rem;">Found ${issues.length} issue${issues.length > 1 ? 's' : ''}</h2>` +
+    issues.map(issue => {
+      const cls = issue.type === 'warning' ? 'warning' : issue.type === 'info' ? 'info' : '';
+      return `<div class="issue ${cls}">
+        <h3>${escHtml(issue.title)}</h3>
+        <p>${escHtml(issue.detail)}</p>
+        ${issue.snippet ? `<pre>${escHtml(issue.snippet)}</pre>` : ''}
+        <div class="suggestion"><strong>Recommendation:</strong> ${escHtml(issue.suggestion)}</div>
+      </div>`;
+    }).join('');
+
+  return preview;
+}
+
+// Chrome silently kills utterances longer than ~15s. We chunk by sentence/line
+// and play them sequentially to work around this.
+let speechQueue = [];
+let isSpeaking = false;
+
+function updateStopBtn() {
+  const btn = document.getElementById('stopBtn');
+  btn.disabled = !isSpeaking;
+  btn.classList.toggle('active', isSpeaking);
+}
+let keepAliveTimer = null;
+
+function speak(text) {
+  window.speechSynthesis.cancel();
+  clearKeepAlive();
+  speechQueue = [];
+  isSpeaking = false;
+  updateStopBtn();
+
+  if (!window.speechSynthesis) {
+    setStatus('Speech synthesis not supported in this browser.', 'error');
+    return;
+  }
+
+  if (!voicesReady) {
+    // Try once more
+    loadVoices();
+    if (!voicesReady) {
+      setStatus('Waiting for voices to load...', 'loading');
+      setTimeout(() => {
+        loadVoices();
+        if (voicesReady) { speak(text); }
+        else { setStatus('No speech voices found. See <a href="#faq-speech" style="color:inherit;text-decoration:underline;">Troubleshooting</a>.', 'error', true); }
+      }, 500);
+      return;
+    }
+  }
+
+  // Split text into chunks at sentence boundaries, line breaks, or ~200 chars
+  const chunks = chunkText(text, 200);
+  if (chunks.length === 0) return;
+
+  speechQueue = chunks;
+  isSpeaking = true;
+  updateStopBtn();
+  setStatus('Speaking...', 'speaking');
+  speakNext();
+}
+
+function chunkText(text, maxLen) {
+  const chunks = [];
+  // First split by lines
+  const lines = text.split('\n');
+  let current = '';
+
+  for (const line of lines) {
+    const toAdd = current ? current + '\n' + line : line;
+    if (toAdd.length > maxLen && current.length > 0) {
+      chunks.push(current);
+      current = line;
+    } else {
+      current = toAdd;
+    }
+  }
+  if (current.length > 0) chunks.push(current);
+
+  // Further split any chunks that are still too long
+  const result = [];
+  for (const chunk of chunks) {
+    if (chunk.length <= maxLen) {
+      result.push(chunk);
+    } else {
+      // Split on sentence boundaries
+      const sentences = chunk.match(/[^.!?]+[.!?]*\s*/g) || [chunk];
+      let buf = '';
+      for (const s of sentences) {
+        if ((buf + s).length > maxLen && buf.length > 0) {
+          result.push(buf);
+          buf = s;
+        } else {
+          buf += s;
+        }
+      }
+      if (buf.length > 0) result.push(buf);
+    }
+  }
+  return result.filter(c => c.trim().length > 0);
+}
+
+function speakNext() {
+  if (speechQueue.length === 0) {
+    isSpeaking = false;
+    updateStopBtn();
+    clearKeepAlive();
+    setStatus('Done.', 'speaking');
+    setTimeout(clearStatus, 2000);
+    return;
+  }
+
+  const chunk = speechQueue.shift();
+  const utter = new SpeechSynthesisUtterance(chunk);
+  utter.rate = parseFloat(rateSlider.value);
+  const voice = getSelectedVoice();
+  if (voice) utter.voice = voice;
+
+  utter.onend = () => speakNext();
+  utter.onerror = (e) => {
+    if (e.error === 'canceled' || e.error === 'interrupted') return;
+    console.warn('Speech error:', e.error);
+    // Try to continue with next chunk
+    speakNext();
+  };
+
+  window.speechSynthesis.speak(utter);
+
+  // Chrome bug workaround: pause/resume keeps the synth alive
+  clearKeepAlive();
+  keepAliveTimer = setInterval(() => {
+    if (window.speechSynthesis.speaking) {
+      window.speechSynthesis.pause();
+      window.speechSynthesis.resume();
+    }
+  }, 10000);
+}
+
+function clearKeepAlive() {
+  if (keepAliveTimer) {
+    clearInterval(keepAliveTimer);
+    keepAliveTimer = null;
+  }
+}
+
+function stopSpeech() {
+  speechQueue = [];
+  isSpeaking = false;
+  updateStopBtn();
+  clearKeepAlive();
+  window.speechSynthesis.cancel();
+  clearStatus();
+}
+
+function escHtml(s) {
+  const d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+document.addEventListener('click', function(e) {
+  const a = e.target.closest('a[href^="#"]');
+  if (!a) return;
+  const el = document.querySelector(a.getAttribute('href'));
+  if (el && el.tagName === 'DETAILS') {
+    e.preventDefault();
+    el.open = true;
+    el.scrollIntoView({ behavior: 'smooth' });
+  }
+});
+// Also handle direct page load with hash
+(function() {
+  const el = document.getElementById(location.hash.replace('#', ''));
+  if (el && el.tagName === 'DETAILS') {
+    el.open = true;
+    el.scrollIntoView();
+  }
+})();
+</script>
+
+<section class="faq-section" id="faq">
+  <h2>How It Works</h2>
+
+  <details class="faq-item">
+    <summary><h3>What does this tool do?</h3></summary>
+    <div class="faq-body">
+      <p>The Screen Reader Preview does three things: it simulates how a screen reader would read a block of text aloud, flags certain problematic patterns in the text -- such as ASCII art and tables, and provides practical recommendations for improvement. It's not a panacea. Rather, it's meant to help familiarize people with some of the most common issues and solutions.</p>   
+    </div>
+  </details>
+
+  <details class="faq-item">
+    <summary><h3>What is a screen reader?</h3></summary>
+    <div class="faq-body">
+      <p>A screen reader is a software program (assistive technology) that allows people with blindness or low vision to access content on their computer screen through a voice synthesizer or braille. The tool described here specifically aims to simulate the former -- the kind of screen reader that reads text aloud.</p>
+    </div>
+  </details>
+
+  <details class="faq-item">
+    <summary><h3>Why does this matter?</h3></summary>
+    <div class="faq-body">
+      <p>Things like ASCII art, maps, and decorative borders are very common in text-based games such as <a href="https://writing-games.org/beginners-guide-to-multi-user-dungeons/">multi-user dungeons (MUDs)</a>, but they do not translate well into speech. A table that looks nice visually can sound like unhelpful gibberish when read aloud by a screen reader. Most people have never heard their content read aloud this way, so they don't realize how these things create barriers for players with visual disabilities.</p>
+    </div>
+  </details>
+
+  <details class="faq-item">
+    <summary><h3>How do I use it?</h3></summary>
+    <div class="faq-body">
+      <p>Paste any text into the input box -- room descriptions, help files, score screens, maps, whatever you want to test. Click <strong>Analyze &amp; Read Aloud</strong> to hear the screen reader simulation and see flagged issues, or <strong>Analyze Only</strong> to just see the results without audio. You can also populate the input box with one of the built-in examples that are quite common among MU* games.</p>
+    </div>
+  </details>
+
+  <details class="faq-item">
+    <summary><h3>How accurate is the voice simulation?</h3></summary>
+    <div class="faq-body">
+      <p>It approximates NVDA-style output at "all punctuation" verbosity, which is common for terminal and MUD use. Real screen readers vary -- JAWS, NVDA, and VoiceOver each handle symbols and pauses slightly differently. The audio uses your browser's speech synthesis, not an actual screen reader engine. Treat this as a close preview, not a perfect replica.</p>
+    </div>
+  </details>
+
+  <details class="faq-item">
+    <summary><h3>What issues can't it detect?</h3></summary>
+    <div class="faq-body">
+      <p>This tool uses pattern-matching heuristics, not AI. It may miss unconventional ASCII art, catch false positives on text that happens to be symbol-heavy, or not flag issues with unusual formatting. It also doesn't evaluate color codes, ANSI escape sequences, or MUD protocol-level features like GMCP or MXP. It analyzes plain text only.</p>
+    </div>
+  </details>
+
+  <details class="faq-item">
+    <summary><h3>What is a screen reader mode?</h3></summary>
+    <div class="faq-body">
+      <p>Screen reader mode is a feature that a game can offer to make its output more accessible. Instead of requiring content creators to avoid all ASCII art, tables, borders, and maps, the game itself can programmatically strip out or replace those elements for players who opt in. This means the visual experience stays intact for sighted players, while screen reader users get clean, readable text.</p>
+      <p>For real-world examples of how this can work in practice, see <a href="https://writing-games.org/accessibility-in-alter-epoch-mu/">this article</a>.</p>
+    </div>
+  </details>
+
+  <details class="faq-item" id="faq-speech">
+    <summary><h3>Help! The read-aloud feature isn't working!</h3></summary>
+    <div class="faq-body">
+      <p>Speech synthesis depends on your browser and operating system. Make sure your browser is up to date for the best experience. Here's what to expect:</p>
+      <p><strong>Chrome / Edge:</strong> Best support. Voices load automatically. If speech cuts out on long text, this tool already works around that with chunked playback.</p>
+      <p><strong>Firefox:</strong> Works, but may use a different default voice. This tool pre-expands all symbols to spoken words before sending to the speech engine, so output should be consistent.</p>
+      <p><strong>Brave:</strong> Unfortunately, Brave's privacy protections block the Web Speech API, so read-aloud will not work. Text analysis still functions normally. Use Chrome or Firefox for speech.</p>
+      <p><strong>Safari:</strong> Works on macOS. Uses the system voices from System Settings &gt; Accessibility &gt; Spoken Content.</p>
+      <p><strong>Linux:</strong> Most desktop distributions include speech services out of the box. If speech isn't working, you may need to install <code>speech-dispatcher</code> and <code>espeak-ng</code>, then restart your browser.</p>
+    </div>
+  </details>
+
+  <details class="faq-item">
+    <summary><h3>I found a bug or have a suggestion.</h3></summary>
+    <div class="faq-body">
+      <p>I'd love to hear from you. Please <a href="https://writing-games.org/contact">submit your feedback here</a> with a description of the issue or your idea. If you can include the text that triggered the problem, that helps a lot. You can also drop by the <a href="https://writing-games.org/discord/">Writing Games Discord server</a> to share your feedback, if that's easier.</p>
+    </div>
+  </details>
+
+  <details class="faq-item">
+    <summary><h3>What fonts does this page use?</h3></summary>
+    <div class="faq-body">
+      <p>This page uses <a href="https://fonts.google.com/specimen/Atkinson+Hyperlegible+Next">Atkinson Hyperlegible Next</a> for all readable text and <a href="https://fonts.google.com/specimen/Atkinson+Hyperlegible+Mono">Atkinson Hyperlegible Mono</a> for the input box and screen reader preview. Both were originally developed by the Braille Institute specifically to maximize character legibility for readers with low vision. Letterforms are designed so that similar characters (like l, 1, and I, or 0 and O) are easy to tell apart. These fonts are free, open-source, and a great choice for any accessibility-focused project.</p>
+    </div>
+  </details>
+</section>
+
+</main>
+
+<footer class="site-footer">
+  <span>v1.0 &middot; Updated 2026-03-06</span>
+  <span>
+    <img src="https://writing-games.org/wp-content/uploads/2024/11/cropped-Writing-Games-D20-Icon-2025.png" alt="">
+    <a href="https://writing-games.org">writing-games.org</a>
+    &middot;
+    <a href="https://writing-games.org/contact/">Contact</a>
+  </span>
+</footer>
+
+</body>
+</html>
