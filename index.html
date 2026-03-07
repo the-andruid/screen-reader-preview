@@ -84,7 +84,15 @@
           "name": "How accurate is the voice simulation?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "It approximates NVDA-style output at \"all punctuation\" verbosity, which is common for terminal and MUD use. Real screen readers vary -- JAWS, NVDA, and VoiceOver each handle symbols and pauses slightly differently. The audio uses your browser's speech synthesis, not an actual screen reader engine. Treat this as a close preview, not a perfect replica."
+            "text": "It approximates how screen readers like NVDA and JAWS handle symbols, with a toggle for two punctuation levels: all (every symbol is spoken) and some (common sentence punctuation is skipped). These are simplified approximations -- real screen readers offer more granularity. The audio uses your browser's speech synthesis, not an actual screen reader engine. Treat this as a close preview, not a perfect replica."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What do the punctuation levels mean?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Screen readers let users choose how much punctuation is spoken aloud. Most offer several thresholds -- NVDA, for example, has four: none, some, most, and all. Each symbol is assigned a minimum threshold at which it gets spoken. This tool simplifies that into two options: All reads every symbol out loud, which is useful for understanding what a screen reader user hears when content is full of special characters. Some skips common sentence punctuation like commas, colons, semicolons, and quotation marks, letting sentences flow more naturally. Periods and structural symbols are still spoken. These are simplified approximations, not exact replicas of any particular screen reader's behavior."
           }
         },
         {
@@ -314,7 +322,7 @@
     margin-bottom: 1rem;
     box-shadow: 0 1px 3px rgba(0,0,0,0.08);
   }
-  .issue h3 { margin: 0 0 0.5rem; font-size: 1rem; color: #a82030; }
+  .issue h3 { margin: 0 0 0.5rem; font-size: 1.1rem; font-weight: 700; letter-spacing: 0.01em; color: #a82030; }
   .issue.warning { border-left-color: #e6a817; }
   .issue.warning h3 { color: #664d00; }
   .issue.info { border-left-color: #0d6efd; }
@@ -436,8 +444,8 @@
     <span class="speed-group"><label class="rate" for="rate">Speed:</label> <input type="range" id="rate" min="0.5" max="2" step="0.1" value="1"><span id="rateVal" class="rate-val">1.0</span></span>
     <label class="rate" for="punctLevel">Punctuation:</label>
     <select id="punctLevel">
-      <option value="all" selected>All (NVDA default for terminals)</option>
-      <option value="some">Some (flowing text mode)</option>
+      <option value="all" selected>All — every symbol is spoken</option>
+      <option value="some">Some — common punctuation is skipped</option>
     </select>
     <label class="rate" for="voiceSelect">Voice:</label> <select id="voiceSelect"><option value="">Loading...</option></select>
   </div>
@@ -958,9 +966,9 @@ function detectExcessiveSymbols(text) {
 }
 
 // --- Screen reader simulation ---
-// Emulates NVDA/JAWS symbol-level "all" verbosity, which is typical for
-// terminal/MUD output. NVDA collapses runs of the same symbol into
-// "N <symbol>" (e.g. "17 dash") which we replicate here.
+// Emulates NVDA/JAWS-style symbol verbosity. At the "all" level every
+// symbol is read aloud, which is typical for terminal/MUD output. Runs
+// of the same symbol are collapsed into "N <symbol>" (e.g. "17 dash").
 
 const SYMBOL_NAMES = {
   '|': 'vertical bar', '\\': 'backslash', '/': 'slash',
@@ -973,10 +981,12 @@ const SYMBOL_NAMES = {
   '$': 'dollar', '\'': 'apostrophe', '"': 'quote',
 };
 
-// NVDA at "all" punctuation level reads every symbol. At "some" level it
-// skips common punctuation in flowing text but still reads structural chars.
+// At the "all" level every symbol is read aloud. At the "some" level,
+// common sentence punctuation is skipped in flowing text while structural
+// characters are still spoken. These are simplified approximations — real
+// screen readers like NVDA offer four levels (none, some, most, all).
 // We default to "all" to show worst-case, with a toggle for "some".
-const SKIP_AT_SOME = new Set(['.', ',', ':', ';', '!', '?', '\'', '"']);
+const SKIP_AT_SOME = new Set([',', ':', ';', '!', '?', '\'', '"']);
 
 function simulateScreenReader(text, punctuationLevel) {
   const level = punctuationLevel || 'all';
@@ -1028,7 +1038,7 @@ function expandLine(line, level) {
 
       if (level === 'some' && SKIP_AT_SOME.has(ch) && runLen === 1) {
         // At "some" level, single common punctuation is skipped in flowing text
-        tokens.push(ch === '.' ? '. ' : ch === ',' ? ', ' : ' ');
+        tokens.push(ch === ',' ? ', ' : ' ');
       } else if (runLen >= 3) {
         // NVDA collapses: "17 dash" instead of "dash dash dash..."
         tokens.push(`${runLen} ${name}`);
@@ -1100,7 +1110,7 @@ function runAnalysis(text) {
   const level = document.getElementById('punctLevel').value;
   const preview = simulateScreenReader(text, level);
   document.getElementById('srPreview').innerHTML =
-    `<div class="sr-preview"><span class="label">-- Screen Reader Preview (NVDA-style, punctuation: ${escHtml(level)}) --</span>\n${escHtml(preview)}</div>`;
+    `<div class="sr-preview"><span class="label">-- Screen Reader Preview (punctuation: ${escHtml(level)}) --</span>\n${escHtml(preview)}</div>`;
 
   // Issues
   const resultsDiv = document.getElementById('results');
@@ -1297,7 +1307,15 @@ function escHtml(s) {
 
   <div class="faq-item">
     <h3>How accurate is the voice simulation?</h3>
-    <p>It approximates NVDA-style output at "all punctuation" verbosity, which is common for terminal and MUD use. Real screen readers vary -- JAWS, NVDA, and VoiceOver each handle symbols and pauses slightly differently. The audio uses your browser's speech synthesis, not an actual screen reader engine. Treat this as a close preview, not a perfect replica.</p>
+    <p>It approximates how screen readers like NVDA and JAWS handle symbols, with a toggle for two punctuation levels: <strong>all</strong> (every symbol is spoken) and <strong>some</strong> (common sentence punctuation is skipped). These are simplified approximations -- real screen readers offer more granularity. The audio uses your browser's speech synthesis, not an actual screen reader engine. Treat this as a close preview, not a perfect replica.</p>
+  </div>
+
+  <div class="faq-item">
+    <h3>What do the punctuation levels mean?</h3>
+    <p>Screen readers let users choose how much punctuation is spoken aloud. Most offer several thresholds -- NVDA, for example, has four: none, some, most, and all. Each symbol is assigned a minimum threshold at which it gets spoken, so changing the level can dramatically change what you hear. This tool simplifies that into two options that cover the range most relevant to text-game content:</p>
+    <p><strong>All</strong> reads every symbol out loud. This is useful for understanding exactly what a screen reader user hears when the content is full of special characters -- which is the typical case for ASCII art, tables, and borders. It's the default here because it best demonstrates the problem.</p>
+    <p><strong>Some</strong> skips common sentence punctuation like commas, colons, semicolons, exclamation marks, question marks, and quotation marks, letting sentences flow more naturally. Periods and structural symbols (pipes, brackets, etc.) are still spoken. This is closer to how many users configure their screen reader for everyday reading.</p>
+    <p>These are simplified approximations, not exact replicas of any particular screen reader's behavior. Real screen readers offer more granularity and let users customize exactly which symbols are spoken at each level. These two options are enough to hear the difference between symbol-heavy content and flowing prose.</p>
   </div>
 
   <div class="faq-item">
@@ -1335,7 +1353,7 @@ function escHtml(s) {
 </main>
 
 <footer class="site-footer">
-  <span>v1.0 &middot; Updated 2026-03-06</span>
+  <span>v1.0 &middot; Updated 2026-03-07</span>
   <span>
     <img src="https://writing-games.org/wp-content/uploads/2024/11/cropped-Writing-Games-D20-Icon-2025.png" alt="">
     <a href="https://writing-games.org">writing-games.org</a>
