@@ -105,6 +105,14 @@
         },
         {
           "@type": "Question",
+          "name": "How do screen readers handle acronyms and all-caps words?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Screen readers use heuristics to decide whether an all-caps word should be spelled out letter by letter or pronounced as a word. If the word has enough vowels to seem pronounceable, the screen reader will try to say it as a word -- so NASA comes out as \"nasa\" and SAMI might become \"sammy.\" If it looks unpronounceable, it gets spelled out: SQL becomes \"S-Q-L.\" These heuristics vary between screen readers, so the same acronym may be handled differently by NVDA, JAWS, and VoiceOver. Short abbreviations can also be interpreted as common English abbreviations rather than game-specific terms. For example, \"DR\" (damage reduction) might be read as \"Doctor\" or \"Drive.\" Users can add custom dictionary entries to their screen reader to override specific words, but spelling out acronyms on first use (e.g. \"Damage Reduction (DR)\") helps both screen reader users and sighted newcomers understand what the abbreviation means."
+          }
+        },
+        {
+          "@type": "Question",
           "name": "What is a screen reader mode?",
           "acceptedAnswer": {
             "@type": "Answer",
@@ -955,6 +963,27 @@ function detectAlignedColumns(text) {
   return issues;
 }
 
+function detectAllCapsAcronyms(text) {
+  const issues = [];
+  // Match all-caps words of 3+ letters (ignoring 1-2 letter words like HP, XP)
+  const words = text.match(/\b[A-Z]{3,}\b/g);
+  if (!words || words.length === 0) return issues;
+
+  // Deduplicate
+  const unique = [...new Set(words)];
+
+  issues.push({
+    type: 'info',
+    title: 'All-Caps Words Detected',
+    detail: `Found ${unique.length} all-caps word${unique.length > 1 ? 's' : ''}: ${unique.join(', ')}. Screen readers use heuristics to decide whether to spell these out letter by letter or pronounce them as words, and the result can vary between screen readers. Short abbreviations may also be interpreted as common English abbreviations -- for example, "DR" might be read as "Doctor" or "Drive."`,
+    snippet: null,
+    suggestion: `Screen readers handle all-caps words inconsistently. Some will be pronounced as words (e.g. NASA becomes "nasa"), others spelled out (e.g. SQL becomes "S-Q-L"), and some may be misread as common abbreviations. This can confuse listeners when game-specific acronyms are read in unexpected ways. See the FAQ section on acronyms and capitalization below for more detail.\n\nFor developers: Consider documenting common acronyms in your game's help files with their full expansions on first use.`,
+    faqLink: '#faq-allcaps',
+  });
+
+  return issues;
+}
+
 function detectExcessiveSymbols(text) {
   const issues = [];
   const total = text.replace(/\s/g, '').length;
@@ -1102,6 +1131,7 @@ function runAnalysis(text) {
     ...detectAsciiArt(text),
     ...detectAlignedColumns(text),
     ...detectExcessiveSymbols(text),
+    ...detectAllCapsAcronyms(text),
   ];
 
   // Deduplicate by title
@@ -1151,6 +1181,7 @@ function runAnalysis(text) {
         <p>${escHtml(issue.detail)}</p>
         ${issue.snippet ? `<pre>${escHtml(issue.snippet)}</pre>` : ''}
         ${renderSuggestion(issue.suggestion)}
+        ${issue.faqLink ? `<p style="margin-top:0.5rem;"><a href="${escHtml(issue.faqLink)}" style="color:inherit;text-decoration:underline;">Learn more in the FAQ</a></p>` : ''}
       </div>`;
     }).join('');
 
@@ -1341,7 +1372,7 @@ function renderSuggestion(suggestionText) {
 
   <div class="faq-item">
     <h3>What does this tool do?</h3>
-    <p>The Screen Reader Preview does three things: it simulates how a screen reader would read a block of text aloud, flags certain problematic patterns in the text -- such as ASCII art and tables, and provides practical recommendations for improvement. It's not a panacea. Rather, it's meant to help familiarize people with some of the most common issues and solutions.</p>
+    <p>The Screen Reader Preview does three things: it simulates how a screen reader would read a block of text aloud, flags certain problematic patterns in the text -- such as ASCII art and tables, and provides practical recommendations for improvement. It's not a panacea. Rather, it's meant to help familiarize people with some of the most common issues and their potential solutions.</p>
   </div>
 
   <div class="faq-item">
@@ -1379,6 +1410,12 @@ function renderSuggestion(suggestionText) {
     <p>This tool uses pattern-matching heuristics, not AI. It may miss unconventional ASCII art, catch false positives on text that happens to be symbol-heavy, or not flag issues with unusual formatting. It also doesn't evaluate color codes, ANSI escape sequences, or MUD protocol-level features like GMCP or MXP. It analyzes plain text only.</p>
   </div>
 
+  <div class="faq-item" id="faq-allcaps">
+    <h3>How do screen readers handle acronyms and all-caps words?</h3>
+    <p>Screen readers use heuristics to decide whether an all-caps word should be spelled out letter by letter or pronounced as a word. If the word has enough vowels to seem pronounceable, the screen reader will try to say it as a word -- so NASA comes out as "nasa" and SAMI might become "sammy." If it looks unpronounceable, it gets spelled out: SQL becomes "S-Q-L." These heuristics vary between screen readers, so the same acronym may be handled differently by NVDA, JAWS, and VoiceOver.</p>
+    <p>Short abbreviations can also be interpreted as common English abbreviations rather than game-specific terms. For example, "DR" (damage reduction) might be read as "Doctor" or "Drive." Users can add custom dictionary entries to their screen reader to override specific words, but spelling out acronyms on first use (e.g. "Damage Reduction (DR)") helps both screen reader users and sighted newcomers understand what the abbreviation means.</p>
+  </div>
+
   <div class="faq-item">
     <h3>What is a screen reader mode?</h3>
     <p>Screen reader mode is a feature that a game can offer to make its output more accessible. Instead of requiring content creators to avoid all ASCII art, tables, borders, and maps, the game itself can programmatically strip out or replace those elements for players who opt in. This means the visual experience stays intact for sighted players, while screen reader users get clean, readable text.</p>
@@ -1411,7 +1448,7 @@ function renderSuggestion(suggestionText) {
 </main>
 
 <footer class="site-footer">
-  <span>v1.0.2 &middot; Updated 2026-03-07 &middot; <a href="https://github.com/the-andruid/screen-reader-preview">GitHub</a></span>
+  <span>v1.1.0 &middot; Updated 2026-03-07 &middot; <a href="https://github.com/the-andruid/screen-reader-preview">GitHub</a></span>
   <span>
     <img src="https://writing-games.org/wp-content/uploads/2024/11/cropped-Writing-Games-D20-Icon-2025.png" alt="">
     <a href="https://writing-games.org">writing-games.org</a>
