@@ -1,6 +1,6 @@
 # Screen Reader Preview
 
-An open-source tool for previewing how text sounds when spoken aloud. Detects ASCII tables, maps, art, and decorative borders that cause accessibility problems in text games such as MUDs.
+An open-source tool for previewing how text sounds when spoken aloud. Detects ASCII tables, maps, art, and decorative borders that create accessibility barriers in text games such as MUDs.
 
 **Live tool:** [writing-games.org/screen-reader-preview](https://writing-games.org/screen-reader-preview)
 
