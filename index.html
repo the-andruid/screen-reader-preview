@@ -7,7 +7,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src https://writing-games.org; connect-src 'none'; frame-src 'none';">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline' https://static.cloudflareinsights.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src https://writing-games.org; connect-src 'none'; frame-src 'none';">
 <title>Screen Reader Preview - Writing Games</title>
 <meta name="description" content="Paste text to hear how it sounds when spoken aloud. Detects ASCII tables, maps, art, and decorative borders that cause accessibility problems in text games such as MUDs.">
 <meta name="keywords" content="screen reader, accessibility, MUD, text game, ASCII art, NVDA, JAWS, VoiceOver, a11y">
@@ -68,7 +68,7 @@
           "name": "Why does this matter?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Things like ASCII art, maps, and decorative borders are very common in text-based games such as multi-user dungeons (MUDs), but they do not translate well into speech. A table that looks nice visually can sound like unhelpful gibberish when read aloud by a screen reader. Most people have never heard their content read aloud this way, so they don't realize how these things create barriers for players with visual disabilities."
+            "text": "Things like ASCII art, maps, and decorative borders are very common in text-based games such as <a href=\"https://writing-games.org/beginners-guide-to-multi-user-dungeons/\">multi-user dungeons (MUDs)</a>, but they do not translate well into speech. A table that looks nice visually can sound like unhelpful gibberish when read aloud by a screen reader. Most people have never heard their content read aloud this way, so they don't realize how these things create barriers for players with visual disabilities."
           }
         },
         {
@@ -108,7 +108,7 @@
           "name": "What is a screen reader mode?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Screen reader mode is a feature that a game can offer to make its output more accessible. Instead of requiring content creators to avoid all ASCII art, tables, borders, and maps, the game itself can programmatically strip out or replace those elements for players who opt in. This means the visual experience stays intact for sighted players, while screen reader users get clean, readable text. For real-world examples of how this can work in practice, see the article Accessibility in Alter Epoch MU at writing-games.org."
+            "text": "Screen reader mode is a feature that a game can offer to make its output more accessible. Instead of requiring content creators to avoid all ASCII art, tables, borders, and maps, the game itself can programmatically strip out or replace those elements for players who opt in. This means the visual experience stays intact for sighted players, while screen reader users get clean, readable text. For real-world examples of how this can work in practice, see <a href=\"https://writing-games.org/accessibility-in-alter-epoch-mu/\">this article</a>."
           }
         },
         {
@@ -124,7 +124,7 @@
           "name": "I found a bug or have a suggestion.",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "I'd love to hear from you. Please submit your feedback at writing-games.org/contact with a description of the issue or your idea. If you can include the text that triggered the problem, that helps a lot. You can also drop by the Writing Games Discord server to share your feedback, if that's easier."
+            "text": "I'd love to hear from you. Please <a href=\"https://github.com/the-andruid/screen-reader-preview/issues\">open an issue on GitHub</a> with a description of the issue or your idea. If you can include the text that triggered the problem, that helps a lot. You can also drop by the <a href=\"https://writing-games.org/discord/\">Writing Games Discord server</a> to share your feedback, if that's easier."
           }
         },
         {
@@ -132,7 +132,7 @@
           "name": "What fonts does this page use?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "This page uses Atkinson Hyperlegible Next for all readable text and Atkinson Hyperlegible Mono for the input box and screen reader preview. Both were originally developed by the Braille Institute specifically to maximize character legibility for readers with low vision. Letterforms are designed so that similar characters (like l, 1, and I, or 0 and O) are easy to tell apart. These fonts are free, open-source, and a great choice for any accessibility-focused project."
+            "text": "This page uses <a href=\"https://fonts.google.com/specimen/Atkinson+Hyperlegible+Next\">Atkinson Hyperlegible Next</a> for all readable text and <a href=\"https://fonts.google.com/specimen/Atkinson+Hyperlegible+Mono\">Atkinson Hyperlegible Mono</a> for the input box and screen reader preview. Both were originally developed by the Braille Institute specifically to maximize character legibility for readers with low vision. Letterforms are designed so that similar characters (like l, 1, and I, or 0 and O) are easy to tell apart. These fonts are free, open-source, and a great choice for any accessibility-focused project."
           }
         }
       ]
@@ -345,6 +345,22 @@
     font-size: 0.85rem;
     margin-top: 0.5rem;
   }
+  .issue .suggestion .suggestion-title {
+    display: block;
+    font-size: 1rem;
+    margin-bottom: 0.2rem;
+  }
+  .issue .suggestion ul {
+    margin: 0.35rem 0 0 1.15rem;
+    padding: 0;
+  }
+  .issue .suggestion li {
+    margin: 0.3rem 0;
+  }
+  .issue .suggestion a {
+    color: #084298;
+    text-decoration: underline;
+  }
 
   /* --- Screen reader preview panel --- */
   .sr-preview {
@@ -423,6 +439,7 @@
   }
   .faq-item a { color: #004da3; }
 </style>
+<script defer data-workspace="67abefacdf60f80d6a891f13" src="https://cdn.jsdelivr.net/npm/litlyx-js@latest/browser/litlyx.js"></script>
 </head>
 <body>
 
@@ -451,8 +468,8 @@
     <span class="speed-group"><label class="rate" for="rate">Speed:</label> <input type="range" id="rate" min="0.5" max="2" step="0.1" value="1"><span id="rateVal" class="rate-val">1.0</span></span>
     <label class="rate" for="punctLevel">Punctuation:</label>
     <select id="punctLevel">
-      <option value="all" selected>All — every symbol is spoken</option>
-      <option value="some">Some — common punctuation is skipped</option>
+      <option value="all" selected>All - every symbol is spoken</option>
+      <option value="some">Some - common punctuation is skipped</option>
     </select>
     <label class="rate" for="voiceSelect">Voice:</label> <select id="voiceSelect"><option value="">Loading...</option></select>
   </div>
@@ -623,9 +640,9 @@ Or a symbol-style map:
     |       |
     @---o---x
 
-   N
+  N
 W + E
-   S`,
+  S`,
 
   columns: `Damage Descriptors (highest to lowest):
 Cataclysmic      Crushing         Moderate
@@ -674,8 +691,8 @@ function detectAsciiTable(text) {
       detail: 'Screen readers will read each character of the table borders (pipes, dashes, plus signs) aloud, making the data incomprehensible.',
       snippet: tableBlock,
       suggestion: cleaned
-        ? `For content creators: Remove the borders so each row reads naturally left to right:\n${cleaned}\nAvoid tables with more than 3 columns or where the data doesn't make sense read left to right.\n\nFor developers: Consider a screen-reader mode that programmatically strips table borders from output.`
-        : 'For content creators: Remove the table borders (pipes, dashes, plus signs). The data is often understandable without them when read left to right.\n\nFor developers: Consider a screen-reader mode that programmatically strips table borders from output.',
+        ? `For content creators: Remove the borders so each row reads naturally left to right:\n${cleaned}\nAvoid tables with more than 3 columns or where the data doesn't make sense read left to right.\n\nFor developers: Consider a screen reader mode that programmatically strips table borders from output.`
+        : 'For content creators: Remove the table borders (pipes, dashes, plus signs). The data is often understandable without them when read left to right.\n\nFor developers: Consider a screen reader mode that programmatically strips table borders from output.',
     });
   }
 
@@ -689,7 +706,7 @@ function detectAsciiTable(text) {
       title: 'Box-Drawing Table Detected',
       detail: 'A screen reader will read "plus dash dash dash plus..." for every border line.',
       snippet: lines.slice(first, last + 1).join('\n'),
-      suggestion: 'For content creators: Remove the box-drawing characters. The data reads fine without them when read left to right.\n\nFor developers: Consider a screen-reader mode that programmatically strips box-drawing characters from output.',
+      suggestion: 'For content creators: Remove the box-drawing characters. The data reads fine without them when read left to right.\n\nFor developers: Consider a screen reader mode that programmatically strips box-drawing characters from output.',
     });
   }
 
@@ -761,7 +778,7 @@ function detectAsciiArt(text) {
       title: 'ASCII Art Detected',
       detail: 'A screen reader will read every symbol character by character ("slash, backslash, asterisk, underscore..."). This is meaningless and frustrating for listeners.',
       snippet: snippet,
-      suggestion: 'For content creators: Replace ASCII art with a text description, e.g. "[A house-shaped building]" or "[A cow saying hello]".\n\nFor developers: Consider a screen-reader mode that replaces or hides ASCII art, or lets builders attach alt-text descriptions.',
+      suggestion: 'For content creators: Replace ASCII art with a text description, e.g. "[A house-shaped building]" or "[A cow saying hello]".\n\nFor developers: Consider a screen reader mode that replaces or hides ASCII art, or lets builders attach alt text descriptions.',
     });
   }
 
@@ -810,8 +827,8 @@ function detectDecorativeBorders(text) {
       detail: 'Decorative borders made of repeated characters (*, ~, =, etc.) will be read symbol-by-symbol, e.g. "asterisk tilde asterisk tilde asterisk..."',
       snippet: snippet,
       suggestion: contentBetween.length
-        ? `For content creators: Remove the borders and keep the content:\n${contentBetween.join('\n')}\n\nFor developers: Consider a screen-reader mode that strips decorative borders from output.`
-        : 'For content creators: Remove decorative borders, or replace with a simple heading or separator.\n\nFor developers: Consider a screen-reader mode that strips decorative borders from output.',
+        ? `For content creators: Remove the borders and keep the content:\n${contentBetween.join('\n')}\n\nFor developers: Consider a screen reader mode that strips decorative borders from output.`
+        : 'For content creators: Remove decorative borders, or replace with a simple heading or separator.\n\nFor developers: Consider a screen reader mode that strips decorative borders from output.',
     });
   }
 
@@ -864,11 +881,11 @@ function detectAsciiMap(text) {
       }
     }
 
-    let suggestion = 'For content creators: Replace the visual map with a text description of connections.\n\nFor developers: Consider a screen-reader mode that substitutes maps with auto-generated text descriptions of connections.';
+    let suggestion = 'For content creators: Replace static visual maps with a text description of connections.\n\nFor developers: If the map is dynamic (for example, generated when a player types "map" while moving), consider providing a screen reader mode that outputs room names, exits, and landmarks in plain text. For an example of this in practice, see https://writing-games.org/empiremud-build-cities-with-text/.';
     if (rooms.length >= 2) {
-      suggestion = `For content creators: Describe the map as a list of connections, for example:\nRooms: ${rooms.join(', ')}.\nThen list connections like: "${rooms[0]} connects east to ${rooms[1] || 'next room'}."\n\nFor developers: Consider a screen-reader mode that replaces visual maps with auto-generated connection descriptions.`;
+      suggestion = `For content creators: Describe static maps as a list of connections, for example:\nRooms: ${rooms.join(', ')}.\nThen list connections like: "${rooms[0]} connects east to ${rooms[1] || 'next room'}."\n\nFor developers: If the map is dynamic (for example, generated when a player types "map" while moving), consider providing a screen reader mode that outputs room names, exits, and landmarks in plain text. For an example of this in practice, see https://writing-games.org/empiremud-build-cities-with-text/.`;
     } else if (hasSymbolMap) {
-      suggestion = 'For content creators: Symbol-based maps are entirely visual and convey no meaning when read aloud. Replace with a text description of connections, e.g. "The inn connects east to the market and south to the well."\n\nFor developers: Consider a screen-reader mode that replaces visual maps with text descriptions of connections.';
+      suggestion = 'For content creators: Symbol-based static maps are entirely visual and convey no meaning when read aloud. Replace with a text description of connections, e.g. "The inn connects east to the market and south to the well."\n\nFor developers: Dynamic map output can provide much richer alternatives: emit room names, exits, and landmarks in plain text instead of symbol layouts. For an example of this in practice, see https://writing-games.org/empiremud-build-cities-with-text/.';
     }
 
     issues.push({
@@ -929,9 +946,9 @@ function detectAlignedColumns(text) {
     issues.push({
       type: 'error',
       title: 'Space-Aligned Columns Detected',
-      detail: 'Text arranged in columns using spaces is read left-to-right, line by line. A sighted reader knows to read down each column before moving right, but a screen reader cannot detect columns — it reads across, scrambling the intended order. For example, "Cataclysmic, Crushing, Moderate" instead of "Cataclysmic, Devastating, Obliterating..."',
+      detail: 'Text arranged in columns using spaces is read left-to-right, line by line. A sighted reader knows to read down each column before moving right, but a screen reader cannot detect columns -- it reads across, scrambling the intended order. For example, "Cataclysmic, Crushing, Moderate" instead of "Cataclysmic, Devastating, Obliterating..."',
       snippet: lines.slice(0, 5).join('\n'),
-      suggestion: 'For content creators: Present items in a single-column list so the reading order matches the intended order. For example:\nCataclysmic, Devastating, Obliterating, Annihilating, Brutal, Crushing, ...\n\nFor developers: Consider a screen-reader mode that re-flows multi-column layouts into a single column.',
+      suggestion: 'For content creators: Present items in a single-column list so the reading order matches the intended order. For example:\nCataclysmic, Devastating, Obliterating, Annihilating, Brutal, Crushing, ...\n\nFor developers: Consider a screen reader mode that re-flows multi-column layouts into a single column.',
     });
   }
 
@@ -964,7 +981,7 @@ function detectExcessiveSymbols(text) {
         title: 'High Symbol-to-Text Ratio',
         detail: `About ${Math.round(ratio * 100)}% of non-space characters are symbols. Screen readers announce each symbol name, making this very verbose.`,
         snippet: null,
-        suggestion: `Stripped version (decorative characters removed):\n${cleaned || '(No meaningful text content found)'}\n\nFor developers: Consider a screen-reader mode that strips decorative characters automatically.`
+        suggestion: `Stripped version (decorative characters removed):\n${cleaned || '(No meaningful text content found)'}\n\nFor developers: Consider a screen reader mode that strips decorative characters automatically.`
       });
     }
   }
@@ -1133,7 +1150,7 @@ function runAnalysis(text) {
         <h3>${escHtml(issue.title)}</h3>
         <p>${escHtml(issue.detail)}</p>
         ${issue.snippet ? `<pre>${escHtml(issue.snippet)}</pre>` : ''}
-        <div class="suggestion"><strong>Recommendation:</strong> ${escHtml(issue.suggestion)}</div>
+        ${renderSuggestion(issue.suggestion)}
       </div>`;
     }).join('');
 
@@ -1287,6 +1304,36 @@ function escHtml(s) {
   return d.innerHTML;
 }
 
+function formatSuggestionBody(text) {
+  const escaped = escHtml(text);
+  // Linkify plain URLs after escaping so recommendation references are clickable.
+  const withLinks = escaped.replace(
+    /(https?:\/\/[^\s<]+)/g,
+    '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>'
+  );
+  return withLinks.replace(/\n/g, '<br>');
+}
+
+function renderSuggestion(suggestionText) {
+  const blocks = suggestionText
+    .split(/\n{2,}/)
+    .map(block => block.trim())
+    .filter(Boolean);
+
+  const items = blocks.map(block => {
+    const labeled = block.match(/^(For [^:]+:)\s*(.*)$/s);
+    if (!labeled) {
+      return `<li>${formatSuggestionBody(block)}</li>`;
+    }
+
+    const label = escHtml(labeled[1]);
+    const body = formatSuggestionBody(labeled[2]);
+    return `<li><strong>${label}</strong> ${body}</li>`;
+  }).join('');
+
+  return `<div class="suggestion"><strong class="suggestion-title">Recommendation:</strong><ul>${items}</ul></div>`;
+}
+
 </script>
 
 <section class="faq-section" id="faq">
@@ -1352,7 +1399,7 @@ function escHtml(s) {
 
   <div class="faq-item">
     <h3>I found a bug or have a suggestion.</h3>
-    <p>I'd love to hear from you. Please <a href="https://writing-games.org/contact">submit your feedback here</a> with a description of the issue or your idea. If you can include the text that triggered the problem, that helps a lot. You can also drop by the <a href="https://writing-games.org/discord/">Writing Games Discord server</a> to share your feedback, if that's easier.</p>
+    <p>I'd love to hear from you. Please <a href="https://github.com/the-andruid/screen-reader-preview/issues">open an issue on GitHub</a> with a description of the issue or your idea. If you can include the text that triggered the problem, that helps a lot. You can also drop by the <a href="https://writing-games.org/discord/">Writing Games Discord server</a> to share your feedback, if that's easier.</p>
   </div>
 
   <div class="faq-item">
@@ -1364,7 +1411,7 @@ function escHtml(s) {
 </main>
 
 <footer class="site-footer">
-  <span>v1.0.1 &middot; Updated 2026-03-07</span>
+  <span>v1.0.2 &middot; Updated 2026-03-07 &middot; <a href="https://github.com/the-andruid/screen-reader-preview">GitHub</a></span>
   <span>
     <img src="https://writing-games.org/wp-content/uploads/2024/11/cropped-Writing-Games-D20-Icon-2025.png" alt="">
     <a href="https://writing-games.org">writing-games.org</a>
