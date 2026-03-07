@@ -116,7 +116,7 @@
           "name": "Help! The read-aloud feature isn't working!",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Speech synthesis depends on your browser and operating system. Make sure your browser is up to date for the best experience. Chrome and Edge have the best support. Firefox works but may use a different default voice. Brave's privacy protections block the Web Speech API, so use Chrome or Firefox instead. Safari works on macOS using system voices. On Linux, most desktop distributions include speech services out of the box. If speech isn't working, install speech-dispatcher and espeak-ng, then restart your browser."
+            "text": "Speech synthesis depends on your browser and operating system. Make sure your browser is up to date for the best experience. Chrome and Edge have the best support. Firefox works but may use a different default voice. Brave has mixed results depending on operating system and environment; for some users speech works, while for others it may be blocked or unreliable. Safari works on macOS using system voices. For troubleshooting on Linux, most desktop distributions include speech services out of the box. If speech isn't working, install speech-dispatcher and espeak-ng, then restart your browser."
           }
         },
         {
@@ -322,7 +322,7 @@
     margin-bottom: 1rem;
     box-shadow: 0 1px 3px rgba(0,0,0,0.08);
   }
-  .issue h3 { margin: 0 0 0.5rem; font-size: 1.1rem; font-weight: 700; letter-spacing: 0.01em; color: #a82030; }
+  .issue h3 { margin: 0 0 0.5rem; color: #a82030; }
   .issue.warning { border-left-color: #e6a817; }
   .issue.warning h3 { color: #664d00; }
   .issue.info { border-left-color: #0d6efd; }
@@ -334,7 +334,7 @@
     border-radius: 4px;
     overflow-x: auto;
     font-family: 'Atkinson Hyperlegible Mono', 'Courier New', monospace;
-    font-size: 0.8rem;
+    font-size: 0.85rem;
     white-space: pre-wrap;
     word-break: break-all;
   }
@@ -388,11 +388,11 @@
     padding: 0.1rem 0.3rem;
     border-radius: 3px;
     font-family: 'Atkinson Hyperlegible Mono', 'Courier New', monospace;
-    font-size: 0.8rem;
+    font-size: 0.9rem;
   }
   .faq-section {
     margin-top: 2rem;
-    font-size: 0.85rem;
+    font-size: 0.9rem;
     padding: 2rem;
   }
   .faq-section h2 {
@@ -408,12 +408,19 @@
     line-height: 1.6;
   }
   .faq-item h3 {
-    font-size: inherit;
+    font-size: 1.1rem;
     font-weight: 600;
     color: #333;
     margin: 0 0 0.25rem;
   }
   .faq-item p { margin: 0.3rem 0; }
+  .faq-item ul {
+    margin: 0.45rem 0 0.45rem 1.25rem;
+    padding: 0;
+  }
+  .faq-item li {
+    margin: 0.35rem 0;
+  }
   .faq-item a { color: #004da3; }
 </style>
 </head>
@@ -1313,8 +1320,10 @@ function escHtml(s) {
   <div class="faq-item">
     <h3>What do the punctuation levels mean?</h3>
     <p>Screen readers let users choose how much punctuation is spoken aloud. Most offer several thresholds -- NVDA, for example, has four: none, some, most, and all. Each symbol is assigned a minimum threshold at which it gets spoken, so changing the level can dramatically change what you hear. This tool simplifies that into two options that cover the range most relevant to text-game content:</p>
-    <p><strong>All</strong> reads every symbol out loud. This is useful for understanding exactly what a screen reader user hears when the content is full of special characters -- which is the typical case for ASCII art, tables, and borders. It's the default here because it best demonstrates the problem.</p>
-    <p><strong>Some</strong> skips common sentence punctuation like commas, colons, semicolons, exclamation marks, question marks, and quotation marks, letting sentences flow more naturally. Periods and structural symbols (pipes, brackets, etc.) are still spoken. This is closer to how many users configure their screen reader for everyday reading.</p>
+    <ul>
+      <li><strong>All</strong> reads every symbol out loud. This is useful for understanding exactly what a screen reader user hears when the content is full of special characters -- which is the typical case for ASCII art, tables, and borders. It's the default here because it best demonstrates the problem.</li>
+      <li><strong>Some</strong> skips common sentence punctuation like commas, colons, semicolons, exclamation marks, question marks, and quotation marks, letting sentences flow more naturally. Periods and structural symbols (pipes, brackets, etc.) are still spoken. This is closer to how many users configure their screen reader for everyday reading.</li>
+    </ul>
     <p>These are simplified approximations, not exact replicas of any particular screen reader's behavior. Real screen readers offer more granularity and let users customize exactly which symbols are spoken at each level. These two options are enough to hear the difference between symbol-heavy content and flowing prose.</p>
   </div>
 
@@ -1332,11 +1341,13 @@ function escHtml(s) {
   <div class="faq-item" id="faq-speech">
     <h3>Help! The read-aloud feature isn't working!</h3>
     <p>Speech synthesis depends on your browser and operating system. Make sure your browser is up to date for the best experience. Here's what to expect:</p>
-    <p><strong>Chrome / Edge:</strong> Best support. Voices load automatically. If speech cuts out on long text, this tool already works around that with chunked playback.</p>
-    <p><strong>Firefox:</strong> Works, but may use a different default voice. This tool pre-expands all symbols to spoken words before sending to the speech engine, so output should be consistent.</p>
-    <p><strong>Brave:</strong> Unfortunately, Brave's privacy protections block the Web Speech API, so read-aloud will not work. Text analysis still functions normally. Use Chrome or Firefox for speech.</p>
-    <p><strong>Safari:</strong> Works on macOS. Uses the system voices from System Settings &gt; Accessibility &gt; Spoken Content.</p>
-    <p><strong>Linux:</strong> Most desktop distributions include speech services out of the box. If speech isn't working, you may need to install <code>speech-dispatcher</code> and <code>espeak-ng</code>, then restart your browser.</p>
+    <ul>
+      <li><strong>Chrome / Edge:</strong> Best support. Voices load automatically. If speech cuts out on long text, this tool already works around that with chunked playback.</li>
+      <li><strong>Firefox:</strong> Works, but may use a different default voice. This tool pre-expands all symbols to spoken words before sending to the speech engine, so output should be consistent.</li>
+      <li><strong>Brave:</strong> Mixed results depending on operating system and environment. Some users report speech works normally, while others find Web Speech blocked or unreliable. If read-aloud fails in Brave, text analysis still works; try Chrome or Firefox for speech.</li>
+      <li><strong>Safari:</strong> Works on macOS. Uses the system voices from System Settings &gt; Accessibility &gt; Spoken Content.</li>
+      <li><strong>Troubleshooting on Linux:</strong> Most desktop distributions include speech services out of the box. If speech isn't working, you may need to install <code>speech-dispatcher</code> and <code>espeak-ng</code>, then restart your browser.</li>
+    </ul>
   </div>
 
   <div class="faq-item">
@@ -1353,7 +1364,7 @@ function escHtml(s) {
 </main>
 
 <footer class="site-footer">
-  <span>v1.0 &middot; Updated 2026-03-07</span>
+  <span>v1.0.1 &middot; Updated 2026-03-07</span>
   <span>
     <img src="https://writing-games.org/wp-content/uploads/2024/11/cropped-Writing-Games-D20-Icon-2025.png" alt="">
     <a href="https://writing-games.org">writing-games.org</a>
