@@ -33,10 +33,10 @@ The CSP meta tag near the top of `<head>` controls which external resources the 
 
 ### 3. Update meta tags and SEO
 
-- **`<title>`** - update the page title (line 11)
-- **`<link rel="canonical">`** - change to your URL (line 14)
-- **Open Graph tags** - update `og:url`, `og:site_name`, and `og:image` to your own (lines 17-21)
-- **Twitter card tags** - update title, description, and image (lines 23-26)
+- **`<title>`** - update the page title
+- **`<link rel="canonical">`** - change to your URL
+- **Open Graph tags** - update `og:url`, `og:site_name`, and `og:image` to your own (search for `og:` in `<head>`)
+- **Twitter card tags** - update title, description, and image (search for `twitter:` in `<head>`)
 - **`<meta name="description">`** and **`<meta name="keywords">`** - adjust if needed
 
 ### 4. Swap out images and branding

@@ -100,7 +100,7 @@
           "name": "What issues can't it detect?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "This tool uses pattern-matching heuristics, not AI. It may miss unconventional ASCII art, catch false positives on text that happens to be symbol-heavy, or not flag issues with unusual formatting. It also doesn't evaluate color codes, ANSI escape sequences, or MUD protocol-level features like GMCP or MXP. It analyzes plain text only."
+            "text": "This tool uses pattern-matching heuristics, not AI. It may miss unconventional ASCII art, catch false positives on text that happens to be symbol-heavy, or not flag issues with unusual formatting. It also doesn't evaluate color codes, ANSI escape sequences, or MUD protocol-level features like GMCP or MXP. It analyzes plain text only. There are also some other categories of text that can be difficult to understand when experienced audibly rather than visually. See \"What about other text that is difficult to read?\" for some examples."
           }
         },
         {
@@ -109,6 +109,14 @@
           "acceptedAnswer": {
             "@type": "Answer",
             "text": "Screen readers use heuristics to decide whether an all-caps word should be spelled out letter by letter or pronounced as a word. If the word has enough vowels to seem pronounceable, the screen reader will try to say it as a word -- so NASA comes out as \"nasa\" and SAMI might become \"sammy.\" If it looks unpronounceable, it gets spelled out: SQL becomes \"S-Q-L.\" These heuristics vary between screen readers, so the same acronym may be handled differently by NVDA, JAWS, and VoiceOver. Short abbreviations can also be interpreted as common English abbreviations rather than game-specific terms. For example, \"DR\" (damage reduction) might be read as \"Doctor\" or \"Drive.\" Users can add custom dictionary entries to their screen reader to override specific words, but spelling out acronyms on first use (e.g. \"Damage Reduction (DR)\") helps both screen reader users and sighted newcomers understand what the abbreviation means."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What about other text that is difficult to read?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Beyond ASCII, there are other patterns of text that can be difficult to interpret when experienced audibly rather than visually. Although detection of these patterns is outside the current scope of this tool, it's important to be aware of them and how they can impact accessibility. A few simplified examples: Pseudolanguage -- An NPC speaks in garbled nonsense like \"zrathk velm oqui shazza\" when the PC doesn't know the language. A player with sight can skim or skip these passages. A screen reader will attempt to pronounce every word aloud every time. Backward text -- A puzzle clue reads \"RETAW EHT KEES\" (seek the water). When spoken aloud, it might not offer the same experience as it would to a player solving the puzzle visually. Mixed languages -- An NPC baker asks, \"Voulez-vous du pain?\" In the terminal, a screen reader set to English will apply English pronunciation rules, because it has no way to know that it should switch to French. In practice, these kinds of patterns can range from mildly frustrating to extremely confusing for players. Implementations vary, so there is no one-size-fits-all way to address them. However, one helpful thing game admins can do is provide essential context. For example, adding something like \"in French\" or \"in another language\" would help screen reader users interpret the spoken text."
           }
         },
         {
@@ -1408,12 +1416,25 @@ function renderSuggestion(suggestionText) {
   <div class="faq-item">
     <h3>What issues can't it detect?</h3>
     <p>This tool uses pattern-matching heuristics, not AI. It may miss unconventional ASCII art, catch false positives on text that happens to be symbol-heavy, or not flag issues with unusual formatting. It also doesn't evaluate color codes, ANSI escape sequences, or MUD protocol-level features like GMCP or MXP. It analyzes plain text only.</p>
+    <p>There are also some other categories of text that can be difficult to understand when experienced audibly rather than visually. See <a href="#faq-difficult-text">"What about other text that is difficult to read?"</a> below for some examples.</p>
   </div>
 
   <div class="faq-item" id="faq-allcaps">
     <h3>How do screen readers handle acronyms and all-caps words?</h3>
     <p>Screen readers use heuristics to decide whether an all-caps word should be spelled out letter by letter or pronounced as a word. If the word has enough vowels to seem pronounceable, the screen reader will try to say it as a word -- so NASA comes out as "nasa" and SAMI might become "sammy." If it looks unpronounceable, it gets spelled out: SQL becomes "S-Q-L." These heuristics vary between screen readers, so the same acronym may be handled differently by NVDA, JAWS, and VoiceOver.</p>
     <p>Short abbreviations can also be interpreted as common English abbreviations rather than game-specific terms. For example, "DR" (damage reduction) might be read as "Doctor" or "Drive." Users can add custom dictionary entries to their screen reader to override specific words, but spelling out acronyms on first use (e.g. "Damage Reduction (DR)") helps both screen reader users and sighted newcomers understand what the abbreviation means.</p>
+  </div>
+
+  <div class="faq-item" id="faq-difficult-text">
+    <h3>What about other text that is difficult to read?</h3>
+    <p>Beyond ASCII, there are other patterns of text that can be difficult to interpret when experienced audibly rather than visually. Although detection of these patterns is outside the current scope of this tool, it's important to be aware of them and how they can impact accessibility.</p>
+    <p>A few simplified examples:</p>
+    <ul>
+      <li><strong>Pseudolanguage:</strong> An NPC speaks in garbled nonsense like "zrathk velm oqui shazza" when the PC doesn't know the language. A player with sight can skim or skip these passages. A screen reader will attempt to pronounce every word aloud every time.</li>
+      <li><strong>Backward text:</strong> A puzzle clue reads "RETAW EHT KEES" (seek the water). When spoken aloud, it might not offer the same experience as it would to a player solving the puzzle visually.</li>
+      <li><strong>Mixed languages:</strong> An NPC baker asks, "Voulez-vous du pain?" In the terminal, a screen reader set to English will apply English pronunciation rules, because it has no way to know that it should switch to French.</li>
+    </ul>
+    <p>In practice, these kinds of patterns can range from mildly frustrating to extremely confusing for players. Implementations vary, so there is no one-size-fits-all way to address them. However, one helpful thing game admins can do is provide essential context. For example, adding something like "in French" or "in another language" would help screen reader users interpret the spoken text.</p>
   </div>
 
   <div class="faq-item">
