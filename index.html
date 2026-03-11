@@ -470,11 +470,11 @@
 
 <div class="example-btns" role="group" aria-label="Load example text">
   <span>Load example:</span>
-  <button onclick="loadExample('table')">ASCII Table</button>
-  <button onclick="loadExample('art')">ASCII Art</button>
-  <button onclick="loadExample('border')">Decorative Border</button>
-  <button onclick="loadExample('map')">MUD Map</button>
-  <button onclick="loadExample('columns')">Text Columns</button>
+  <button data-example="table">ASCII Table</button>
+  <button data-example="art">ASCII Art</button>
+  <button data-example="border">Decorative Border</button>
+  <button data-example="map">MUD Map</button>
+  <button data-example="columns">Text Columns</button>
 </div>
 
 <label for="input" class="sr-only">Text to analyze</label>
@@ -491,9 +491,9 @@
   </div>
 </div>
 <div class="controls">
-  <button class="btn-primary" onclick="analyze()" id="analyzeBtn">Analyze &amp; Read Aloud</button>
-  <button class="btn-secondary" onclick="analyzeOnly()">Analyze Only</button>
-  <button class="btn-stop" onclick="stopSpeech()" id="stopBtn" disabled>Stop Reading</button>
+  <button class="btn-primary" id="analyzeBtn">Analyze &amp; Read Aloud</button>
+  <button class="btn-secondary" id="analyzeOnlyBtn">Analyze Only</button>
+  <button class="btn-stop" id="stopBtn" disabled>Stop Reading</button>
   <span id="speechStatus" class="speech-status"></span>
 </div>
 
@@ -505,6 +505,14 @@ const rateSlider = document.getElementById('rate');
 const rateVal = document.getElementById('rateVal');
 const speechStatus = document.getElementById('speechStatus');
 rateSlider.addEventListener('input', () => rateVal.textContent = parseFloat(rateSlider.value).toFixed(1));
+
+// --- Button event listeners (avoid inline onclick for browsers that block it) ---
+document.getElementById('analyzeBtn').addEventListener('click', () => analyze());
+document.getElementById('analyzeOnlyBtn').addEventListener('click', () => analyzeOnly());
+document.getElementById('stopBtn').addEventListener('click', () => stopSpeech());
+document.querySelectorAll('[data-example]').forEach(btn => {
+  btn.addEventListener('click', () => loadExample(btn.dataset.example));
+});
 
 // --- Speech setup ---
 // Chrome lazily loads voices; we must wait for them.
@@ -586,9 +594,17 @@ loadVoices();
 if (window.speechSynthesis.onvoiceschanged !== undefined) {
   window.speechSynthesis.onvoiceschanged = loadVoices;
 }
-// Some browsers need a second kick
+// Some browsers (especially iOS) need extra time to load voices
 setTimeout(loadVoices, 250);
 setTimeout(loadVoices, 1000);
+setTimeout(loadVoices, 3000);
+setTimeout(() => {
+  loadVoices();
+  if (!voicesReady) {
+    // After 5 seconds, if still no voices, update the dropdown to show a clear message
+    voiceSelect.innerHTML = '<option value="">No voices available</option>';
+  }
+}, 5000);
 
 function setStatus(msg, cls, html) {
   if (html) speechStatus.innerHTML = msg;
@@ -1216,7 +1232,7 @@ function speak(text) {
   updateStopBtn();
 
   if (!window.speechSynthesis) {
-    setStatus('Speech synthesis not supported in this browser.', 'error');
+    setStatus('Speech synthesis not supported in this browser. Try Chrome, Edge, Firefox, or Safari.', 'error');
     return;
   }
 
@@ -1225,11 +1241,21 @@ function speak(text) {
     loadVoices();
     if (!voicesReady) {
       setStatus('Waiting for voices to load...', 'loading');
-      setTimeout(() => {
+      // Retry with increasing delays — iOS and privacy browsers can be slow
+      let retries = 0;
+      const maxRetries = 4;
+      const delays = [500, 1000, 2000, 3000];
+      function retryVoiceLoad() {
         loadVoices();
-        if (voicesReady) { speak(text); }
-        else { setStatus('No speech voices found. See <a href="#faq-speech" style="color:inherit;text-decoration:underline;">Troubleshooting</a>.', 'error', true); }
-      }, 500);
+        if (voicesReady) { speak(text); return; }
+        retries++;
+        if (retries < maxRetries) {
+          setTimeout(retryVoiceLoad, delays[retries]);
+        } else {
+          setStatus('No speech voices available in this browser. The analysis below still works — audio requires Chrome, Edge, Firefox, or Safari. See <a href="#faq-speech" style="color:inherit;text-decoration:underline;">Troubleshooting</a>.', 'error', true);
+        }
+      }
+      setTimeout(retryVoiceLoad, delays[0]);
       return;
     }
   }
@@ -1450,8 +1476,9 @@ function renderSuggestion(suggestionText) {
       <li><strong>Chrome / Edge:</strong> Best support. Voices load automatically. If speech cuts out on long text, this tool already works around that with chunked playback.</li>
       <li><strong>Firefox:</strong> Works, but may use a different default voice. This tool pre-expands all symbols to spoken words before sending to the speech engine, so output should be consistent.</li>
       <li><strong>Brave:</strong> Mixed results depending on operating system and environment. Some users report speech works normally, while others find Web Speech blocked or unreliable. If read-aloud fails in Brave, text analysis still works; try Chrome or Firefox for speech.</li>
-      <li><strong>Safari:</strong> Works on macOS. Uses the system voices from System Settings &gt; Accessibility &gt; Spoken Content.</li>
-      <li><strong>Troubleshooting on Linux:</strong> Most desktop distributions include speech services out of the box. If speech isn't working, you may need to install <code>speech-dispatcher</code> and <code>espeak-ng</code>, then restart your browser.</li>
+      <li><strong>DuckDuckGo:</strong> Privacy protections may block the Web Speech API entirely, causing voices to never load. Text analysis still works fine — for audio, try Safari (iOS/macOS), Chrome, or Firefox.</li>
+      <li><strong>Safari:</strong> Works on macOS and iOS. Uses the system voices from Settings &gt; Accessibility &gt; Spoken Content.</li>
+      <li><strong>Troubleshooting on Linux:</strong> Unlike Windows and macOS, Linux browsers don't bundle their own text-to-speech engine — they rely on the system's <code>speech-dispatcher</code> service and a voice backend like <code>espeak-ng</code>. Most desktop distributions include these out of the box, but if speech isn't working, install them with <code>sudo apt install speech-dispatcher espeak-ng</code> (or your distro's equivalent) and restart your browser.</li>
     </ul>
   </div>
 
@@ -1469,7 +1496,7 @@ function renderSuggestion(suggestionText) {
 </main>
 
 <footer class="site-footer">
-  <span>v1.1.2 &middot; Updated 2026-03-09 &middot; <a href="https://github.com/the-andruid/screen-reader-preview">GitHub</a></span>
+  <span>v1.1.3 &middot; Updated 2026-03-10 &middot; <a href="https://github.com/the-andruid/screen-reader-preview">GitHub</a></span>
   <span>
     <img src="https://writing-games.org/wp-content/uploads/2024/11/cropped-Writing-Games-D20-Icon-2025.png" alt="">
     <a href="https://writing-games.org">writing-games.org</a>
