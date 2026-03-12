@@ -443,11 +443,11 @@
     font-size: 1.1rem;
     font-weight: 600;
     color: #333;
-    margin: 0 0 0.25rem;
+    margin: 0 0 0.5rem;
   }
-  .faq-item p { margin: 0.3rem 0; }
+  .faq-item p { margin: 0.3rem 0 0.75rem; }
   .faq-item ul {
-    margin: 0.45rem 0 0.45rem 1.25rem;
+    margin: 0.45rem 0 0.75rem 1.25rem;
     padding: 0;
   }
   .faq-item li {
@@ -1252,7 +1252,7 @@ function speak(text) {
         if (retries < maxRetries) {
           setTimeout(retryVoiceLoad, delays[retries]);
         } else {
-          setStatus('No speech voices available in this browser. The analysis below still works — audio requires Chrome, Edge, Firefox, or Safari. See <a href="#faq-speech" style="color:inherit;text-decoration:underline;">Troubleshooting</a>.', 'error', true);
+          setStatus('No speech voices available in this browser. The analysis below still works, but audio requires Chrome, Edge, Firefox, or Safari. See <a href="#faq-speech" style="color:inherit;text-decoration:underline;">Troubleshooting</a>.', 'error', true);
         }
       }
       setTimeout(retryVoiceLoad, delays[0]);
@@ -1476,10 +1476,10 @@ function renderSuggestion(suggestionText) {
       <li><strong>Chrome / Edge:</strong> Best support. Voices load automatically. If speech cuts out on long text, this tool already works around that with chunked playback.</li>
       <li><strong>Firefox:</strong> Works, but may use a different default voice. This tool pre-expands all symbols to spoken words before sending to the speech engine, so output should be consistent.</li>
       <li><strong>Brave:</strong> Mixed results depending on operating system and environment. Some users report speech works normally, while others find Web Speech blocked or unreliable. If read-aloud fails in Brave, text analysis still works; try Chrome or Firefox for speech.</li>
-      <li><strong>DuckDuckGo:</strong> Privacy protections may block the Web Speech API entirely, causing voices to never load. Text analysis still works fine — for audio, try Safari (iOS/macOS), Chrome, or Firefox.</li>
+      <li><strong>DuckDuckGo:</strong> Privacy protections may block the Web Speech API entirely, causing voices to never load. Text analysis should still work, but for audio, try Safari (iOS/macOS), Chrome, or Firefox.</li>
       <li><strong>Safari:</strong> Works on macOS and iOS. Uses the system voices from Settings &gt; Accessibility &gt; Spoken Content.</li>
-      <li><strong>Troubleshooting on Linux:</strong> Unlike Windows and macOS, Linux browsers don't bundle their own text-to-speech engine — they rely on the system's <code>speech-dispatcher</code> service and a voice backend like <code>espeak-ng</code>. Most desktop distributions include these out of the box, but if speech isn't working, install them with <code>sudo apt install speech-dispatcher espeak-ng</code> (or your distro's equivalent) and restart your browser.</li>
-    </ul>
+      </ul>
+      <p><strong>Troubleshooting on Linux:</strong> Unlike Windows and macOS, Linux browsers don't bundle their own text-to-speech engine. Instead, they rely on the system's <code>speech-dispatcher</code> service and a voice backend like <code>espeak-ng</code>. Most desktop distributions include these, but if speech isn't working, install them with <code>sudo apt install speech-dispatcher espeak-ng</code> (or your distro's equivalent) and restart your browser.</p>
   </div>
 
   <div class="faq-item">
@@ -1496,7 +1496,7 @@ function renderSuggestion(suggestionText) {
 </main>
 
 <footer class="site-footer">
-  <span>v1.1.3 &middot; Updated 2026-03-10 &middot; <a href="https://github.com/the-andruid/screen-reader-preview">GitHub</a></span>
+  <span>v1.1.4 &middot; Updated 2026-03-12 &middot; <a href="https://github.com/the-andruid/screen-reader-preview">GitHub</a></span>
   <span>
     <img src="https://writing-games.org/wp-content/uploads/2024/11/cropped-Writing-Games-D20-Icon-2025.png" alt="">
     <a href="https://writing-games.org">writing-games.org</a>
